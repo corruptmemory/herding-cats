@@ -1,0 +1,13 @@
+project/boot
+project/build/target
+project/plugins/project
+.scala_dependencies
+.settings
+.manager
+target
+lib
+lib_managed
+tags
+TAGS
+logs
+src_managed
