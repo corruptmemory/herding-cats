@@ -1,5 +1,5 @@
 /**
- * package.scala
+ * version.scala
  *
  * @author <a href="mailto:jim@corruptmemory.com">Jim Powers</a>
  *
@@ -18,8 +18,24 @@
  * limitations under the License.
  */
 
-package com.corruptmemory
+package com.corruptmemory.herding_cats
 
-package object herding_cats extends ZKVersions
-                            with ZKACL
-                            with Zookeepers
+sealed abstract class ZKVersion {
+  def value:Int
+}
+case object AnyVersion extends ZKVersion {
+  val value:Int = -1
+}
+case class Version(value:Int) extends ZKVersion
+
+trait ZKVersions {
+  import ZKVersion._
+  def anyVersion:ZKVersion = AnyVersion
+  def version(i:Int):ZKVersion = toVersion(i)
+}
+
+object ZKVersion {
+  implicit def toVersion(i:Int):ZKVersion =
+   if (i < 0) AnyVersion
+   else Version(i)
+}

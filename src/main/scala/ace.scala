@@ -1,5 +1,5 @@
 /**
- * package.scala
+ * ace.scala
  *
  * @author <a href="mailto:jim@corruptmemory.com">Jim Powers</a>
  *
@@ -18,8 +18,15 @@
  * limitations under the License.
  */
 
-package com.corruptmemory
+package com.corruptmemory.herding_cats
+import org.apache.zookeeper.data.{Id}
 
-package object herding_cats extends ZKVersions
-                            with ZKACL
-                            with Zookeepers
+case class ZKAccessControlEntry(id:Id,perms:Int)
+
+trait ZKACL {
+  import org.apache.zookeeper.data.{ACL}
+  import java.util.{List=>JList}
+  import scala.collection.JavaConversions._
+
+  implicit def toJListAcl(in:Seq[ZKAccessControlEntry]):JList[ACL] = in.map(x => new ACL(x.perms,x.id))
+}
