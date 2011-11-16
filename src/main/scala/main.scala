@@ -21,24 +21,21 @@
 package com.corruptmemory.herding_cats
 
 import scala.util.continuations._
-import org.apache.zookeeper.{ZooKeeper, Watcher, AsyncCallback,CreateMode}
-import org.apache.zookeeper.data.{Id,Stat,ACL}
-import AsyncCallback.{ACLCallback, Children2Callback, ChildrenCallback, DataCallback, StatCallback, StringCallback, VoidCallback}
 
 /** Just a silly test used to explore how the continuations plugin works
  */
 object Main {
 
-  def foo:Stat = withZK(ZK("",0,null)) {
+  def foo:Unit = loopWithZK(ZK("127.0.0.1:2181",5000)) {
     zk => reset {
-      val path = zk.path("foo")
-      val stat = path.stat
-      path.delete()
-      stat
+      val path = zk.path("/foo")
+      val data = path.data[Unit]
+      println("Data: %s".format(data))
+      // println("Stat: %s".format(new String(data)))
     }
   }
 
   def main(args:Array[String]) {
-    println(foo)
+    foo
   }
 }

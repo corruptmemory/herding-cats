@@ -25,9 +25,13 @@ import AsyncCallback.{ACLCallback, Children2Callback, ChildrenCallback, DataCall
 import java.util.{List=>JList}
 
 object ZKCallbacks {
+  import org.apache.zookeeper.KeeperException.Code
+  def rcDumper(rc:Int):Unit = println(Code.get(rc).toString)
+
   class StatCallbackW[T](responder:(Int,String,Object,Stat)=>T) extends StatCallback {
     var result:T = _
     def processResult(rc:Int,path:String,ctx:Object,stat:Stat):Unit = {
+      rcDumper(rc)
       result = responder(rc,path,ctx,stat)
     }
   }
@@ -35,6 +39,7 @@ object ZKCallbacks {
   class ACLCallbackW[T](responder:((Int,String,Object,JList[ACL],Stat)=>T)) extends ACLCallback {
     var result:T = _
     def processResult(rc:Int,path:String,ctx:Object,acl:JList[ACL],stat:Stat):Unit = {
+      rcDumper(rc)
       result = responder(rc,path,ctx,acl,stat)
     }
   }
@@ -42,6 +47,7 @@ object ZKCallbacks {
   class Children2CallbackW[T](responder:((Int,String,Object,JList[String],Stat)=>T)) extends Children2Callback {
     var result:T = _
     def processResult(rc:Int,path:String,ctx:Object,children:JList[String],stat:Stat)  = {
+      rcDumper(rc)
       result = responder(rc,path,ctx,children,stat)
     }
   }
@@ -49,6 +55,7 @@ object ZKCallbacks {
   class DataCallbackW[T](responder:((Int,String,Object,Array[Byte],Stat)=>T)) extends DataCallback {
     var result:T = _
     def processResult(rc:Int,path:String,ctx:Object,data:Array[Byte],stat:Stat):Unit = {
+      rcDumper(rc)
       result = responder(rc,path,ctx,data,stat)
     }
   }

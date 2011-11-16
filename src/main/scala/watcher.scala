@@ -27,8 +27,16 @@ import scalaz._
 import Scalaz._
 
 object ZKWatcher {
+  class WatcherCallbackW[T](responder:WatchedEvent => T) extends Watcher {
+    var result:T = _
+    def process(event:WatchedEvent):Unit = {
+      result = responder(event)
+    }
+  }
 
   def apply(block:WatchedEvent => Unit):Watcher = new Watcher {
     def process(event:WatchedEvent):Unit = block(event)
   }
+
+  def watcherCallback[T](responder:WatchedEvent => T):WatcherCallbackW[T] = new WatcherCallbackW[T](responder)
 }

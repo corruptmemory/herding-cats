@@ -20,31 +20,44 @@
 
 package com.corruptmemory.herding_cats
 import scala.util.continuations._
-import org.apache.zookeeper.{ZooKeeper, Watcher, AsyncCallback,CreateMode}
-import org.apache.zookeeper.data.{Id,Stat,ACL}
-import AsyncCallback.{ACLCallback, Children2Callback, ChildrenCallback, DataCallback, StatCallback, StringCallback, VoidCallback}
+import org.apache.zookeeper.{ZooKeeper,Watcher,WatchedEvent}
 import scalaz._
 import Scalaz._
-import java.util.{List=>JList}
-import scala.collection.JavaConversions._
 
 trait Zookeepers {
-  def withZK[T](factory:() => ZK)(body:ZK => T):T = {
-    val zk = factory()
-    val result = body(zk)
+  def withZK[T <: AnyRef](factory:(WatchedEvent => Unit) => ZK)(body:ZK => T):T = {
+    var result:T = null
+    var zk:ZK = null
+    def watcher(event:WatchedEvent) {
+      result = body(zk)
+      result.notifyAll()
+    }
+    zk = factory(watcher _)
+    result.synchronized {
+      result.wait()
+    }
     zk.withWrapped(_.close)
     result
   }
+  def loopWithZK(factory:(WatchedEvent => Unit) => ZK)(body:ZK => Unit):Unit = {
+    var zk:ZK = null
+    def watcher(event:WatchedEvent) {
+      body(zk)
+    }
+    zk = factory(watcher _)
+    Thread.sleep(1000*10)
+    zk.withWrapped(_.close)
+  }
 }
 
-class ZK(val wrapped:ZooKeeper) {
-  def sessionId:Long = wrapped.getSessionId
-  def sessionPassword:Array[Byte] = wrapped.getSessionPasswd
-  def sessionTimeout:Int = wrapped.getSessionTimeout
+class ZK(wrapped:ZooKeeper) {
+  def id:Long = wrapped.getSessionId
+  def password:Array[Byte] = wrapped.getSessionPasswd
+  def timeout:Int = wrapped.getSessionTimeout
   def withWrapped[T](f:ZooKeeper => T):T = f(wrapped)
   def path(p:String):ZKPath = new ZKPath(p,this)
 }
 
 object ZK {
-  def apply(connectString:String,sessionTimeout:Int,watcher:Watcher):(() => ZK) = (() => new ZK(new ZooKeeper(connectString,sessionTimeout,watcher)))
+  def apply(connectString:String,sessionTimeout:Int)(watcher:WatchedEvent => Unit):ZK = new ZK(new ZooKeeper(connectString,sessionTimeout,ZKWatcher(watcher)))
 }

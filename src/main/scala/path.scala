@@ -30,27 +30,27 @@ import scala.collection.JavaConversions._
 
 class ZKPath(val path:String,val connection:ZK) {
   import ZKCallbacks._
-  def stat = shift { k:(Stat => Stat) =>
+  def stat[T] = shift { k:(Stat => T) =>
     val cb = statCallback((_:Int,_:String,_:Object,stat:Stat) => stat)
-    connection.wrapped.exists(path,true,cb,this)
+    connection.withWrapped(_.exists(path,true,cb,this))
     k(cb.result)
   }
   def exists = stat != null
 
-  def statAndACL = shift { k:(Tuple2[Stat,Seq[ZKAccessControlEntry]] => Tuple2[Stat,Seq[ZKAccessControlEntry]]) =>
+  def statAndACL[T] = shift { k:(Tuple2[Stat,Seq[ZKAccessControlEntry]] => T) =>
     val cb = aclCallback[Tuple2[Stat,Seq[ZKAccessControlEntry]]]((_:Int,_:String,_:Object,jacl:JList[ACL],stat:Stat) => (stat,jacl.map(a => ZKAccessControlEntry(a.getId,a.getPerms))))
     val statIn = new Stat()
-    connection.wrapped.getACL(path,statIn,cb,this)
+    connection.withWrapped(_.getACL(path,statIn,cb,this))
     k(cb.result)
   }
-  def children = shift { k:(Seq[String] => Seq[String]) =>
+  def children[T] = shift { k:(Seq[String] => T) =>
     val cb = children2Callback[Seq[String]]((_:Int,_:String,_:Object,children:JList[String],_:Stat) => children)
-    connection.wrapped.getChildren(path,true,cb,this)
+    connection.withWrapped(_.getChildren(path,true,cb,this))
     k(cb.result)
   }
-  def data = shift { k:(Array[Byte] => Array[Byte]) =>
+  def data[T] = shift { k:(Array[Byte] => T) =>
     val cb = dataCallback[Array[Byte]]((_:Int,_:String,_:Object,data:Array[Byte],_:Stat) => data)
-    connection.wrapped.getData(path,true,cb,this)
+    connection.withWrapped(_.getData(path,true,cb,this))
     k(cb.result)
   }
   def create(data:Array[Byte],acl:Seq[ZKAccessControlEntry], createMode:CreateMode):String = connection.withWrapped(_.create(path,data,acl,createMode))
