@@ -23,45 +23,63 @@ import org.apache.zookeeper.{ZooKeeper, Watcher, AsyncCallback,CreateMode}
 import org.apache.zookeeper.data.{Id,Stat,ACL}
 import AsyncCallback.{ACLCallback, Children2Callback, ChildrenCallback, DataCallback, StatCallback, StringCallback, VoidCallback}
 import java.util.{List=>JList}
+import scalaz._
+import Scalaz._
 
 object ZKCallbacks {
   import org.apache.zookeeper.KeeperException.Code
   def rcDumper(rc:Int):Unit = println(Code.get(rc).toString)
+  def rcWrap[T](rc:Int)(result: => Result[T]):Result[T] = Code.get(rc) match {
+    case Code.OK => result
+    case Code.SESSIONEXPIRED | Code.NOAUTH => disconnected.failNel
+    case x@_ => message("Not OK: %s".format(x.toString)).failNel
+  }
+  def done[T](result:Result[T]):Boolean =
+    result.fold(success = _ => true,
+                failure = f => f.list.head match {
+                  case Message(_) => false
+                  case _ => true
+                })
 
-  class StatCallbackW[T](responder:(Int,String,Object,Stat)=>T) extends StatCallback {
-    var result:T = _
+  class StatCallbackW[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,Stat)=>Result[T]) extends StatCallback {
     def processResult(rc:Int,path:String,ctx:Object,stat:Stat):Unit = {
       rcDumper(rc)
-      result = responder(rc,path,ctx,stat)
+      val result = rcWrap(rc)(responder(rc,path,ctx,stat))
+      if (!done(result)) zk.withWrapped(_.exists(path,true,this,null))
+      else cont(result)
     }
   }
 
-  class ACLCallbackW[T](responder:((Int,String,Object,JList[ACL],Stat)=>T)) extends ACLCallback {
-    var result:T = _
+  class ACLCallbackW[T,K](zk:ZK,cont:Result[T] => K,responder:((Int,String,Object,JList[ACL],Stat)=>Result[T])) extends ACLCallback {
     def processResult(rc:Int,path:String,ctx:Object,acl:JList[ACL],stat:Stat):Unit = {
       rcDumper(rc)
-      result = responder(rc,path,ctx,acl,stat)
+      val result = rcWrap(rc)(responder(rc,path,ctx,acl,stat))
+      val statIn = new Stat()
+      if (!done(result)) zk.withWrapped(_.getACL(path,statIn,this,null))
+      else cont(result)
     }
   }
 
-  class Children2CallbackW[T](responder:((Int,String,Object,JList[String],Stat)=>T)) extends Children2Callback {
-    var result:T = _
+  class Children2CallbackW[T,K](zk:ZK,cont:Result[T] => K,responder:((Int,String,Object,JList[String],Stat)=>Result[T])) extends Children2Callback {
     def processResult(rc:Int,path:String,ctx:Object,children:JList[String],stat:Stat)  = {
       rcDumper(rc)
-      result = responder(rc,path,ctx,children,stat)
+      val result = rcWrap(rc)(responder(rc,path,ctx,children,stat))
+      if (!done(result)) zk.withWrapped(_.getChildren(path,true,this,null))
+      else cont(result)
     }
   }
 
-  class DataCallbackW[T](responder:((Int,String,Object,Array[Byte],Stat)=>T)) extends DataCallback {
-    var result:T = _
+  class DataCallbackW[T,K](zk:ZK,cont:Result[T] => K,responder:((Int,String,Object,Array[Byte],Stat)=>Result[T])) extends DataCallback {
     def processResult(rc:Int,path:String,ctx:Object,data:Array[Byte],stat:Stat):Unit = {
       rcDumper(rc)
-      result = responder(rc,path,ctx,data,stat)
+      val result = rcWrap(rc)(responder(rc,path,ctx,data,stat))
+      if (!done(result)) zk.withWrapped(_.getData(path,true,this,null))
+      else cont(result)
     }
   }
 
-  def statCallback[T](responder:(Int,String,Object,Stat)=>T):StatCallbackW[T] = new StatCallbackW[T](responder)
-  def aclCallback[T](responder:(Int,String,Object,JList[ACL],Stat)=>T):ACLCallbackW[T] = new ACLCallbackW[T](responder)
-  def children2Callback[T](responder:(Int,String,Object,JList[String],Stat)=>T):Children2CallbackW[T] = new Children2CallbackW[T](responder)
-  def dataCallback[T](responder:(Int,String,Object,Array[Byte],Stat)=>T):DataCallbackW[T] = new DataCallbackW[T](responder)
+  def statCallback[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,Stat)=>Result[T]):StatCallbackW[T,K] = new StatCallbackW[T,K](zk,cont,responder)
+  def aclCallback[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,JList[ACL],Stat)=>Result[T]):ACLCallbackW[T,K] = new ACLCallbackW[T,K](zk,cont,responder)
+  def children2Callback[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,JList[String],Stat)=>Result[T]):Children2CallbackW[T,K] = new Children2CallbackW[T,K](zk,cont,responder)
+  def dataCallback[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,Array[Byte],Stat)=>Result[T]):DataCallbackW[T,K] = new DataCallbackW[T,K](zk,cont,responder)
 }

@@ -30,29 +30,32 @@ import scala.collection.JavaConversions._
 
 class ZKPath(val path:String,val connection:ZK) {
   import ZKCallbacks._
-  def stat[T] = shift { k:(Stat => T) =>
-    val cb = statCallback((_:Int,_:String,_:Object,stat:Stat) => stat)
+  def stat[T] = shift { k:(Result[Stat] => T) =>
+    val cb = statCallback[Stat,T](connection,k,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
     connection.withWrapped(_.exists(path,true,cb,this))
-    k(cb.result)
   }
-  def exists = stat != null
+  def exists = {
+    val r = stat[Boolean]
+     r.fold(failure = _ => false,
+            success = s => s != null)
+  }
 
-  def statAndACL[T] = shift { k:(Tuple2[Stat,Seq[ZKAccessControlEntry]] => T) =>
-    val cb = aclCallback[Tuple2[Stat,Seq[ZKAccessControlEntry]]]((_:Int,_:String,_:Object,jacl:JList[ACL],stat:Stat) => (stat,jacl.map(a => ZKAccessControlEntry(a.getId,a.getPerms))))
+  def statAndACL[T] = shift { k:(Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]] => T) =>
+    val cb = aclCallback[Tuple2[Stat,Seq[ZKAccessControlEntry]],T](connection,k,(_:Int,_:String,_:Object,jacl:JList[ACL],stat:Stat) => (stat,jacl.map(a => ZKAccessControlEntry(a.getId,a.getPerms))).successNel)
     val statIn = new Stat()
     connection.withWrapped(_.getACL(path,statIn,cb,this))
-    k(cb.result)
   }
-  def children[T] = shift { k:(Seq[String] => T) =>
-    val cb = children2Callback[Seq[String]]((_:Int,_:String,_:Object,children:JList[String],_:Stat) => children)
+
+  def children[T] = shift { k:(Result[Seq[String]] => T) =>
+    val cb = children2Callback[Seq[String],T](connection,k,(_:Int,_:String,_:Object,children:JList[String],_:Stat) => children.toSeq.successNel)
     connection.withWrapped(_.getChildren(path,true,cb,this))
-    k(cb.result)
   }
-  def data[T] = shift { k:(Array[Byte] => T) =>
-    val cb = dataCallback[Array[Byte]]((_:Int,_:String,_:Object,data:Array[Byte],_:Stat) => data)
+
+  def data[T] = shift { k:(Result[Array[Byte]] => T) =>
+    val cb = dataCallback[Array[Byte],T](connection,k,(_:Int,_:String,_:Object,data:Array[Byte],_:Stat) => data.successNel)
     connection.withWrapped(_.getData(path,true,cb,this))
-    k(cb.result)
   }
+
   def create(data:Array[Byte],acl:Seq[ZKAccessControlEntry], createMode:CreateMode):String = connection.withWrapped(_.create(path,data,acl,createMode))
   def delete(version:ZKVersion = anyVersion):Unit = connection.withWrapped(_.delete(path,version.value))
   def update(data:Array[Byte],version:ZKVersion):Unit = connection.withWrapped(_.setData(path,data,version.value))

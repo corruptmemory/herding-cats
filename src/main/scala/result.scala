@@ -1,5 +1,5 @@
 /**
- * main.scala
+ * result.scala
  *
  * @author <a href="mailto:jim@corruptmemory.com">Jim Powers</a>
  *
@@ -19,26 +19,9 @@
  */
 
 package com.corruptmemory.herding_cats
+import scalaz._
+import Scalaz._
 
-import scala.util.continuations._
-
-/** Just a silly test used to explore how the continuations plugin works
- */
-object Main {
-
-  def foo:Unit = loopWithZK(ZK("127.0.0.1:2181",5000)) {
-    zk => reset {
-      val path = zk.path("/foo")
-      val path1 = zk.path("/bar")
-      val data = path.data[Unit]
-      println("Data: %s".format(data))
-      val data1 = path1.data[Unit]
-      println("Data1: %s".format(data1))
-      // println("Stat: %s".format(new String(data)))
-    }
-  }
-
-  def main(args:Array[String]) {
-    foo
-  }
+trait Results {
+  type Result[T] = ValidationNEL[Error,T]
 }

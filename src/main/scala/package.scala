@@ -23,3 +23,5 @@ package com.corruptmemory
 package object herding_cats extends ZKVersions
                             with ZKACL
                             with Zookeepers
+                            with Errors
+                            with Results

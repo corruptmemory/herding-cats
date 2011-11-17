@@ -45,7 +45,7 @@ trait Zookeepers {
       body(zk)
     }
     zk = factory(watcher _)
-    Thread.sleep(1000*10)
+    Thread.sleep(1000*60*15)
     zk.withWrapped(_.close)
   }
 }
