@@ -28,11 +28,14 @@ import Scalaz._
 
 object ZKCallbacks {
   import org.apache.zookeeper.KeeperException.Code
-  def rcDumper(rc:Int):Unit = println(Code.get(rc).toString)
-  def rcWrap[T](rc:Int)(result: => Result[T]):Result[T] = Code.get(rc) match {
+  def rcWrap[T](path:String,rc:Int)(result: => Result[T]):Result[T] = Code.get(rc) match {
     case Code.OK => result
     case Code.SESSIONEXPIRED | Code.NOAUTH => disconnected.failNel
-    case x@_ => message("Not OK: %s".format(x.toString)).failNel
+    case Code.NONODE => nonode.failNel
+    case x@_ => {
+      println("'%s' not OK: %s".format(path,x.toString))
+      message("'%s' not OK: %s".format(path,x.toString)).failNel
+    }
   }
   def done[T](result:Result[T]):Boolean =
     result.fold(success = _ => true,
@@ -43,37 +46,41 @@ object ZKCallbacks {
 
   class StatCallbackW[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,Stat)=>Result[T]) extends StatCallback {
     def processResult(rc:Int,path:String,ctx:Object,stat:Stat):Unit = {
-      rcDumper(rc)
-      val result = rcWrap(rc)(responder(rc,path,ctx,stat))
-      if (!done(result)) zk.withWrapped(_.exists(path,true,this,null))
+      val result = rcWrap(path,rc)(responder(rc,path,ctx,stat))
+      if (!done(result)) zk.withWrapped(_.exists(path,true,this,ctx))
       else cont(result)
     }
   }
 
   class ACLCallbackW[T,K](zk:ZK,cont:Result[T] => K,responder:((Int,String,Object,JList[ACL],Stat)=>Result[T])) extends ACLCallback {
     def processResult(rc:Int,path:String,ctx:Object,acl:JList[ACL],stat:Stat):Unit = {
-      rcDumper(rc)
-      val result = rcWrap(rc)(responder(rc,path,ctx,acl,stat))
+      val result = rcWrap(path,rc)(responder(rc,path,ctx,acl,stat))
       val statIn = new Stat()
-      if (!done(result)) zk.withWrapped(_.getACL(path,statIn,this,null))
+      if (!done(result)) zk.withWrapped(_.getACL(path,statIn,this,ctx))
       else cont(result)
     }
   }
 
   class Children2CallbackW[T,K](zk:ZK,cont:Result[T] => K,responder:((Int,String,Object,JList[String],Stat)=>Result[T])) extends Children2Callback {
     def processResult(rc:Int,path:String,ctx:Object,children:JList[String],stat:Stat)  = {
-      rcDumper(rc)
-      val result = rcWrap(rc)(responder(rc,path,ctx,children,stat))
-      if (!done(result)) zk.withWrapped(_.getChildren(path,true,this,null))
+      val result = rcWrap(path,rc)(responder(rc,path,ctx,children,stat))
+      if (!done(result)) zk.withWrapped(_.getChildren(path,true,this,ctx))
       else cont(result)
     }
   }
 
   class DataCallbackW[T,K](zk:ZK,cont:Result[T] => K,responder:((Int,String,Object,Array[Byte],Stat)=>Result[T])) extends DataCallback {
     def processResult(rc:Int,path:String,ctx:Object,data:Array[Byte],stat:Stat):Unit = {
-      rcDumper(rc)
-      val result = rcWrap(rc)(responder(rc,path,ctx,data,stat))
-      if (!done(result)) zk.withWrapped(_.getData(path,true,this,null))
+      val result = rcWrap(path,rc)(responder(rc,path,ctx,data,stat))
+      if (!done(result)) zk.withWrapped(_.getData(path,true,this,ctx))
+      else cont(result)
+    }
+  }
+
+  class CreateCallbackW[T,K](zk:ZK,data:Array[Byte],acl:JList[ACL],createMode:CreateMode,cont:Result[T] => K,responder:((Int,String,Object,String)=>Result[T])) extends StringCallback {
+    def processResult(rc:Int,path:String, ctx:Object, name:String):Unit = {
+      val result = rcWrap(path,rc)(responder(rc,path,ctx,name))
+      if (!done(result)) zk.withWrapped(_.create(path,data,acl,createMode,this,ctx))
       else cont(result)
     }
   }
@@ -82,4 +89,5 @@ object ZKCallbacks {
   def aclCallback[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,JList[ACL],Stat)=>Result[T]):ACLCallbackW[T,K] = new ACLCallbackW[T,K](zk,cont,responder)
   def children2Callback[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,JList[String],Stat)=>Result[T]):Children2CallbackW[T,K] = new Children2CallbackW[T,K](zk,cont,responder)
   def dataCallback[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,Array[Byte],Stat)=>Result[T]):DataCallbackW[T,K] = new DataCallbackW[T,K](zk,cont,responder)
+  def createCallback[T,K](zk:ZK,data:Array[Byte],acl:JList[ACL],createMode:CreateMode,cont:Result[T] => K,responder:(Int,String,Object,String)=>Result[T]):CreateCallbackW[T,K] = new CreateCallbackW[T,K](zk,data,acl,createMode,cont,responder)
 }

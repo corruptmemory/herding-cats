@@ -20,37 +20,58 @@
 
 package com.corruptmemory.herding_cats
 import scala.util.continuations._
-import org.apache.zookeeper.{ZooKeeper,Watcher,WatchedEvent}
+import org.apache.zookeeper.{ZooKeeper,Watcher,WatchedEvent,CreateMode,ZooDefs}
+import ZooDefs.Ids
 import scalaz._
 import Scalaz._
 
-trait Zookeepers {
-  def withZK[T <: AnyRef](factory:(WatchedEvent => Unit) => ZK)(body:ZK => T):T = {
-    var result:T = null
-    var zk:ZK = null
-    def watcher(event:WatchedEvent) {
-      result = body(zk)
-      result.notifyAll()
+final class Shutdowner(wrapped:Object) {
+  def shutdown() {
+    wrapped.synchronized {
+      wrapped.notifyAll()
     }
-    zk = factory(watcher _)
-    result.synchronized {
-      result.wait()
-    }
-    zk.withWrapped(_.close)
-    result
   }
-  def loopWithZK(factory:(WatchedEvent => Unit) => ZK)(body:ZK => Unit):Unit = {
+}
+
+trait Zookeepers {
+  def watchControlNode(zk:ZK,controlPath:String)(cont: => Unit @suspendable):Unit @suspendable = {
+    val path = zk.path(controlPath)
+    val exists = path.exists[Unit]
+    if (!exists) {
+      path.create[Unit](Array[Byte]('0'.toByte),toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL)
+      ()
+    } else {
+      val data = path.data[Unit]
+      println("%s: %s".format(controlPath,data.map(new String(_))))
+      cont
+    }
+  }
+
+  def withZK(controlPath:String,factory:(String,WatchedEvent => Unit) => ZK)(body:(Shutdowner,ZK) => Unit @suspendable) {
+    import Watcher.Event.{KeeperState,EventType}
+    val syncObject = new Object
+    val shutdowner = new Shutdowner(syncObject)
     var zk:ZK = null
     def watcher(event:WatchedEvent) {
-      body(zk)
+      event.getState match {
+        case KeeperState.SyncConnected => {
+          reset {
+            watchControlNode(zk,controlPath)(body(shutdowner,zk))
+          }
+        }
+        case KeeperState.Expired | KeeperState.AuthFailed => shutdowner.shutdown()
+        case x@_ => () // Some other condition that we can ignore.  Need logging!
+      }
     }
-    zk = factory(watcher _)
-    Thread.sleep(1000*60*15)
+    zk = factory(controlPath,watcher _)
+    syncObject.synchronized {
+      syncObject.wait()
+    }
     zk.withWrapped(_.close)
   }
 }
 
-class ZK(wrapped:ZooKeeper) {
+final class ZK(controlPath:String,wrapped:ZooKeeper) {
   def id:Long = wrapped.getSessionId
   def password:Array[Byte] = wrapped.getSessionPasswd
   def timeout:Int = wrapped.getSessionTimeout
@@ -59,5 +80,5 @@ class ZK(wrapped:ZooKeeper) {
 }
 
 object ZK {
-  def apply(connectString:String,sessionTimeout:Int)(watcher:WatchedEvent => Unit):ZK = new ZK(new ZooKeeper(connectString,sessionTimeout,ZKWatcher(watcher)))
+  def apply(connectString:String,sessionTimeout:Int)(controlPath:String,watcher:WatchedEvent => Unit):ZK = new ZK(controlPath,new ZooKeeper(connectString,sessionTimeout,ZKWatcher(watcher)))
 }

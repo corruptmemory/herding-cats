@@ -34,14 +34,14 @@ class ZKPath(val path:String,val connection:ZK) {
     val cb = statCallback[Stat,T](connection,k,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
     connection.withWrapped(_.exists(path,true,cb,this))
   }
-  def exists = {
-    val r = stat[Boolean]
-     r.fold(failure = _ => false,
-            success = s => s != null)
+  def exists[T] = {
+    val s = stat[T]
+    s.fold(failure = _ => false,
+           success = s => s != null)
   }
 
   def statAndACL[T] = shift { k:(Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]] => T) =>
-    val cb = aclCallback[Tuple2[Stat,Seq[ZKAccessControlEntry]],T](connection,k,(_:Int,_:String,_:Object,jacl:JList[ACL],stat:Stat) => (stat,jacl.map(a => ZKAccessControlEntry(a.getId,a.getPerms))).successNel)
+    val cb = aclCallback[Tuple2[Stat,Seq[ZKAccessControlEntry]],T](connection,k,(_:Int,_:String,_:Object,jacl:JList[ACL],stat:Stat) => (stat,toSeqZKAccessControlEntry(jacl)).successNel)
     val statIn = new Stat()
     connection.withWrapped(_.getACL(path,statIn,cb,this))
   }
@@ -56,7 +56,11 @@ class ZKPath(val path:String,val connection:ZK) {
     connection.withWrapped(_.getData(path,true,cb,this))
   }
 
-  def create(data:Array[Byte],acl:Seq[ZKAccessControlEntry], createMode:CreateMode):String = connection.withWrapped(_.create(path,data,acl,createMode))
+  // Use Async call to avoid double invocation of watcher
+  def create[T](data:Array[Byte],acl:Seq[ZKAccessControlEntry], createMode:CreateMode) = shift { k:(Result[String] => T) =>
+    val cb = createCallback[String,T](connection,data,acl,createMode,k,(_:Int,_:String,_:Object,name:String) => name.successNel)
+    connection.withWrapped(_.create(path,data,acl,createMode,cb,this))
+  }
   def delete(version:ZKVersion = anyVersion):Unit = connection.withWrapped(_.delete(path,version.value))
   def update(data:Array[Byte],version:ZKVersion):Unit = connection.withWrapped(_.setData(path,data,version.value))
   def updateACL(acl:Seq[ZKAccessControlEntry],version:ZKVersion):Unit = connection.withWrapped(_.setACL(path,acl,version.value))

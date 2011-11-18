@@ -29,4 +29,5 @@ trait ZKACL {
   import scala.collection.JavaConversions._
 
   implicit def toJListAcl(in:Seq[ZKAccessControlEntry]):JList[ACL] = in.map(x => new ACL(x.perms,x.id))
+  def toSeqZKAccessControlEntry(in:JList[ACL]):Seq[ZKAccessControlEntry] = in.map((x:ACL) => new ZKAccessControlEntry(x.getId,x.getPerms))
 }
