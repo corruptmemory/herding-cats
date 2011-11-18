@@ -34,12 +34,17 @@ final class Shutdowner(wrapped:Object) {
 }
 
 trait Zookeepers {
-  def watchControlNode(zk:ZK,controlPath:String)(cont: => Unit @suspendable):Unit @suspendable = {
+  def watchControlNode(zk:ZKReader,controlPath:String)(cont: => Unit @suspendable):Unit @suspendable = {
     val path = zk.path(controlPath)
     val exists = path.exists[Unit]
     if (!exists) {
-      path.create[Unit](Array[Byte]('0'.toByte),toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL)
-      ()
+      zk.withWriter[Unit] {
+        zkw => {
+          val wpath = zkw.path(controlPath)
+          wpath.create[Unit](Array[Byte]('0'.toByte),toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL)
+          ()
+        }
+      }
     } else {
       val data = path.data[Unit]
       println("%s: %s".format(controlPath,data.map(new String(_))))
@@ -47,11 +52,11 @@ trait Zookeepers {
     }
   }
 
-  def withZK(controlPath:String,factory:(String,WatchedEvent => Unit) => ZK)(body:(Shutdowner,ZK) => Unit @suspendable) {
+  def withZK(controlPath:String,factory:(String,WatchedEvent => Unit) => ZKReader)(body:(Shutdowner,ZKReader) => Unit @suspendable) {
     import Watcher.Event.{KeeperState,EventType}
     val syncObject = new Object
     val shutdowner = new Shutdowner(syncObject)
-    var zk:ZK = null
+    var zk:ZKReader = null
     def watcher(event:WatchedEvent) {
       event.getState match {
         case KeeperState.SyncConnected => reset(watchControlNode(zk,controlPath)(body(shutdowner,zk)))
@@ -67,14 +72,23 @@ trait Zookeepers {
   }
 }
 
-final class ZK(controlPath:String,wrapped:ZooKeeper) {
+sealed abstract class ZK(wrapped:ZooKeeper) {
+  def controlPath:String
   def id:Long = wrapped.getSessionId
   def password:Array[Byte] = wrapped.getSessionPasswd
   def timeout:Int = wrapped.getSessionTimeout
   def withWrapped[T](f:ZooKeeper => T):T = f(wrapped)
-  def path(p:String):ZKPath = new ZKPath(p,this)
+}
+
+final class ZKReader(val controlPath:String,wrapped:ZooKeeper) extends ZK(wrapped) {
+  def path(p:String):ZKPathReader = new ZKPathReader(p,this)
+  def withWriter[T](body:ZKWriter => T @suspendable):T @suspendable = body(new ZKWriter(controlPath,wrapped))
+}
+
+final class ZKWriter(val controlPath:String,wrapped:ZooKeeper) extends ZK(wrapped) {
+  def path(p:String):ZKPathWriter = new ZKPathWriter(p,this)
 }
 
 object ZK {
-  def apply(connectString:String,sessionTimeout:Int)(controlPath:String,watcher:WatchedEvent => Unit):ZK = new ZK(controlPath,new ZooKeeper(connectString,sessionTimeout,ZKWatcher(watcher)))
+  def apply(connectString:String,sessionTimeout:Int)(controlPath:String,watcher:WatchedEvent => Unit):ZKReader = new ZKReader(controlPath,new ZooKeeper(connectString,sessionTimeout,ZKWatcher(watcher)))
 }

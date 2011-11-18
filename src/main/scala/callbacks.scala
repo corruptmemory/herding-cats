@@ -31,6 +31,7 @@ object ZKCallbacks {
   def rcWrap[T](path:String,rc:Int)(result: => Result[T]):Result[T] = Code.get(rc) match {
     case Code.OK => result
     case Code.SESSIONEXPIRED | Code.NOAUTH => disconnected.failNel
+    case Code.BADVERSION => versionmismatch.failNel
     case Code.NONODE => nonode.failNel
     case x@_ => {
       println("'%s' not OK: %s".format(path,x.toString))
@@ -48,6 +49,22 @@ object ZKCallbacks {
     def processResult(rc:Int,path:String,ctx:Object,stat:Stat):Unit = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,stat))
       if (!done(result)) zk.withWrapped(_.exists(path,true,this,ctx))
+      else cont(result)
+    }
+  }
+
+  class SetDataCallbackW[T,K](zk:ZK,data:Array[Byte],version:ZKVersion,cont:Result[T] => K,responder:(Int,String,Object,Stat)=>Result[T]) extends StatCallback {
+    def processResult(rc:Int,path:String,ctx:Object,stat:Stat):Unit = {
+      val result = rcWrap(path,rc)(responder(rc,path,ctx,stat))
+      if (!done(result)) zk.withWrapped(_.setData(path,data,version.value,this,ctx))
+      else cont(result)
+    }
+  }
+
+  class SetAclCallbackW[T,K](zk:ZK,acl:JList[ACL],version:ZKVersion,cont:Result[T] => K,responder:(Int,String,Object,Stat)=>Result[T]) extends StatCallback {
+    def processResult(rc:Int,path:String,ctx:Object,stat:Stat):Unit = {
+      val result = rcWrap(path,rc)(responder(rc,path,ctx,stat))
+      if (!done(result)) zk.withWrapped(_.setACL(path,acl,version.value,this,ctx))
       else cont(result)
     }
   }
@@ -85,9 +102,20 @@ object ZKCallbacks {
     }
   }
 
+  class DeleteCallbackW[T,K](zk:ZK,version:ZKVersion,cont:Result[T] => K,responder:((Int,String,Object)=>Result[T])) extends VoidCallback {
+    def processResult(rc:Int,path:String,ctx:Object):Unit = {
+      val result = rcWrap(path,rc)(responder(rc,path,ctx))
+      if (!done(result)) zk.withWrapped(_.delete(path,version.value,this,ctx))
+      else cont(result)
+    }
+  }
+
   def statCallback[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,Stat)=>Result[T]):StatCallbackW[T,K] = new StatCallbackW[T,K](zk,cont,responder)
+  def setDataCallback[T,K](zk:ZK,data:Array[Byte],version:ZKVersion,cont:Result[T] => K,responder:(Int,String,Object,Stat)=>Result[T]):SetDataCallbackW[T,K] = new SetDataCallbackW[T,K](zk,data,version,cont,responder)
+  def setAclCallback[T,K](zk:ZK,acl:JList[ACL],version:ZKVersion,cont:Result[T] => K,responder:(Int,String,Object,Stat)=>Result[T]):SetAclCallbackW[T,K] = new SetAclCallbackW[T,K](zk,acl,version,cont,responder)
   def aclCallback[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,JList[ACL],Stat)=>Result[T]):ACLCallbackW[T,K] = new ACLCallbackW[T,K](zk,cont,responder)
   def children2Callback[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,JList[String],Stat)=>Result[T]):Children2CallbackW[T,K] = new Children2CallbackW[T,K](zk,cont,responder)
   def dataCallback[T,K](zk:ZK,cont:Result[T] => K,responder:(Int,String,Object,Array[Byte],Stat)=>Result[T]):DataCallbackW[T,K] = new DataCallbackW[T,K](zk,cont,responder)
   def createCallback[T,K](zk:ZK,data:Array[Byte],acl:JList[ACL],createMode:CreateMode,cont:Result[T] => K,responder:(Int,String,Object,String)=>Result[T]):CreateCallbackW[T,K] = new CreateCallbackW[T,K](zk,data,acl,createMode,cont,responder)
+  def deleteCallback[T,K](zk:ZK,version:ZKVersion,cont:Result[T] => K,responder:(Int,String,Object)=>Result[T]):DeleteCallbackW[T,K] = new DeleteCallbackW[T,K](zk,version,cont,responder)
 }

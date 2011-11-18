@@ -26,6 +26,7 @@ case class Caught(message:String,throwable:Throwable) extends Error
 case class Uncaught(throwable:Throwable) extends Error
 case object Disconnected extends Error
 case object NoNode extends Error
+case object VersionMismatch extends Error
 
 trait Errors {
   def message(m:String):Error = Message(m)
@@ -33,4 +34,5 @@ trait Errors {
   def uncaught(t:Throwable):Error = Uncaught(t)
   def disconnected:Error = Disconnected
   def nonode:Error = NoNode
+  def versionmismatch:Error = VersionMismatch
 }

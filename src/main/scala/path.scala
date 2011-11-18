@@ -28,12 +28,15 @@ import Scalaz._
 import java.util.{List=>JList}
 import scala.collection.JavaConversions._
 
-class ZKPath(val path:String,val connection:ZK) {
+sealed trait ZKPathBase[T <: ZK] {
   import ZKCallbacks._
+  def path:String
+  def connection:T
   def stat[T] = shift { k:(Result[Stat] => T) =>
     val cb = statCallback[Stat,T](connection,k,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
     connection.withWrapped(_.exists(path,true,cb,this))
   }
+
   def exists[T] = {
     val s = stat[T]
     s.fold(failure = _ => false,
@@ -55,13 +58,29 @@ class ZKPath(val path:String,val connection:ZK) {
     val cb = dataCallback[Array[Byte],T](connection,k,(_:Int,_:String,_:Object,data:Array[Byte],_:Stat) => data.successNel)
     connection.withWrapped(_.getData(path,true,cb,this))
   }
+}
 
-  // Use Async call to avoid double invocation of watcher
+class ZKPathReader(val path:String,val connection:ZKReader) extends ZKPathBase[ZKReader]
+
+class ZKPathWriter(val path:String,val connection:ZKWriter) extends ZKPathBase[ZKWriter] {
+  import ZKCallbacks._
   def create[T](data:Array[Byte],acl:Seq[ZKAccessControlEntry], createMode:CreateMode) = shift { k:(Result[String] => T) =>
     val cb = createCallback[String,T](connection,data,acl,createMode,k,(_:Int,_:String,_:Object,name:String) => name.successNel)
     connection.withWrapped(_.create(path,data,acl,createMode,cb,this))
   }
-  def delete(version:ZKVersion = anyVersion):Unit = connection.withWrapped(_.delete(path,version.value))
-  def update(data:Array[Byte],version:ZKVersion):Unit = connection.withWrapped(_.setData(path,data,version.value))
-  def updateACL(acl:Seq[ZKAccessControlEntry],version:ZKVersion):Unit = connection.withWrapped(_.setACL(path,acl,version.value))
+
+  def delete[T](version:ZKVersion = anyVersion) = shift { k:(Result[Unit] => T) =>
+    val cb = deleteCallback[Unit,T](connection,version,k,(_:Int,_:String,_:Object) => ().successNel)
+    connection.withWrapped(_.delete(path,version.value,cb,this))
+  }
+
+  def update[T](data:Array[Byte],version:ZKVersion) = shift { k:(Result[Unit] => T) =>
+    val cb = setDataCallback[Unit,T](connection,data,version,k,(_:Int,_:String,_:Object,_:Stat) => ().successNel)
+    connection.withWrapped(_.setData(path,data,version.value,cb,this))
+  }
+
+  def updateACL[T](acl:Seq[ZKAccessControlEntry],version:ZKVersion) = shift { k:(Result[Unit] => T) =>
+    val cb = setAclCallback[Unit,T](connection,acl,version,k,(_:Int,_:String,_:Object,_:Stat) => ().successNel)
+    connection.withWrapped(_.setACL(path,acl,version.value,cb,this))
+  }
 }
