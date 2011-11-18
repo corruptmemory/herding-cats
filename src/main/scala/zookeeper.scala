@@ -54,11 +54,7 @@ trait Zookeepers {
     var zk:ZK = null
     def watcher(event:WatchedEvent) {
       event.getState match {
-        case KeeperState.SyncConnected => {
-          reset {
-            watchControlNode(zk,controlPath)(body(shutdowner,zk))
-          }
-        }
+        case KeeperState.SyncConnected => reset(watchControlNode(zk,controlPath)(body(shutdowner,zk)))
         case KeeperState.Expired | KeeperState.AuthFailed => shutdowner.shutdown()
         case x@_ => () // Some other condition that we can ignore.  Need logging!
       }

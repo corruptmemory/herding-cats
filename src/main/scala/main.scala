@@ -25,15 +25,22 @@ import scala.util.continuations._
 /** Just a silly test used to explore how the continuations plugin works
  */
 object Main {
+  import scalaz._
+  import Scalaz._
+
+  def printer(data:String,data1:String) {
+      println("Data: %s".format(data))
+      println("Data1: %s".format(data1))
+  }
 
   def foo:Unit = withZK("/test/control",ZK("127.0.0.1:2181",5000)) {
     (shutdowner,zk) => {
       val path = zk.path("/foo")
       val path1 = zk.path("/bar")
       val data = path.data[Unit]
-      println("Data: %s".format(data.map(new String(_))))
       val data1 = path1.data[Unit]
-      println("Data1: %s".format(data1.map(new String(_))))
+      ((data.map(new String(_)) |@| data1.map(new String(_))) apply (printer _)).fold(failure = f => println("Failure: %s".format(f)),
+                                                                                      success = _ => println("Success"))
     }
   }
 
