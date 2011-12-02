@@ -34,24 +34,7 @@ final class Shutdowner(wrapped:Object) {
 }
 
 trait Zookeepers {
-  def watchControlNode(zk:ZKReader,controlPath:String)(cont: => Unit @suspendable):Unit @suspendable = {
-    val path = zk.path(controlPath)
-    val exists = path.exists[Unit]
-    if (!exists) {
-      zk.withWriter[Unit] {
-        zkw => {
-          val wpath = zkw.path(controlPath)
-          wpath.create[Unit](Array[Byte]('0'.toByte),toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL)
-          ()
-        }
-      }
-    } else {
-      val data = path.data[Unit]
-      println("%s: %s".format(controlPath,data.map(new String(_))))
-      cont
-    }
-  }
-
+  import Zookeepers._
   def withZK(controlPath:String,factory:(String,WatchedEvent => Unit) => ZKReader)(body:(Shutdowner,ZKReader) => Unit @suspendable) {
     import Watcher.Event.{KeeperState,EventType}
     val syncObject = new Object
@@ -87,6 +70,50 @@ final class ZKReader(val controlPath:String,wrapped:ZooKeeper) extends ZK(wrappe
 
 final class ZKWriter(val controlPath:String,wrapped:ZooKeeper) extends ZK(wrapped) {
   def path(p:String):ZKPathWriter = new ZKPathWriter(p,this)
+}
+
+object Zookeepers {
+  def dummy:Unit @suspendable = shift {k:(Unit => Unit) => k() }
+
+  def watchControlNode(zk:ZKReader,controlPath:String)(cont: => Unit @suspendable):Unit @suspendable = {
+    val path = zk.path(controlPath)
+    val exists = path.exists[Unit]
+    if (!exists) {
+      zk.withWriter[Unit] {
+        zkw => {
+          val wpath = zkw.path(controlPath)
+          wpath.create[Unit](Array[Byte]('1'.toByte),toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL)
+          ()
+        }
+      }
+    } else {
+      val data = path.data[Unit]
+      println("%s: %s".format(controlPath,data.map(new String(_))))
+      data.map(new String(_)) match {
+        case Failure(_) => dummy
+        case Success(e) => if (e == "1") cont else dummy
+      }
+      ()
+    }
+  }
+
+  def enableWatches(zk:ZKReader,controlPath:String) = {
+    zk.withWriter[Result[Unit]] {
+      zkw => {
+        val wpath = zkw.path(controlPath)
+        wpath.update[Unit](Array[Byte]('1'.toByte),anyVersion)
+      }
+    }
+  }
+
+  def disableWatches(zk:ZKReader,controlPath:String) = {
+    zk.withWriter[Result[Unit]] {
+      zkw => {
+        val wpath = zkw.path(controlPath)
+        wpath.update[Unit](Array[Byte]('0'.toByte),anyVersion)
+      }
+    }
+  }
 }
 
 object ZK {
