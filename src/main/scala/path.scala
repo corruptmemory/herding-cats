@@ -19,44 +19,58 @@
  */
 
 package com.corruptmemory.herding_cats
-import scala.util.continuations._
 import org.apache.zookeeper.{ZooKeeper, Watcher, AsyncCallback,CreateMode}
 import org.apache.zookeeper.data.{Id,Stat,ACL}
 import AsyncCallback.{ACLCallback, Children2Callback, ChildrenCallback, DataCallback, StatCallback, StringCallback, VoidCallback}
-import scalaz._
-import Scalaz._
 import java.util.{List=>JList}
 import scala.collection.JavaConversions._
+import scalaz._
+import scalaz.concurrent._
+import Scalaz._
 
 sealed trait ZKPathBase[T <: ZK] {
   import ZKCallbacks._
   def path:String
   def connection:T
-  def stat[T] = shift { k:(Result[Stat] => T) =>
-    val cb = statCallback[Stat,T](connection,k,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
+  def stat:Result[Stat] = {
+    println("stat")
+    val p = emptyPromise[Result[Stat]](Strategy.Sequential)
+    println("p")
+    val cb = statCallback[Stat](connection,p,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
+    println("cb")
     connection.withWrapped(_.exists(path,true,cb,this))
+    println("connection.withWrapped(_.exists(path,true,cb,this))")
+    Thread.sleep(3000)
+    println("Slept")
+    p.get
   }
 
-  def exists[T] = {
-    val s = stat[T]
-    s.fold(failure = _ => false,
-           success = s => s != null)
+  def exists:Boolean = {
+    println("exists")
+    stat.fold(failure = _ => false,
+              success = s => s != null)
   }
 
-  def statAndACL[T] = shift { k:(Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]] => T) =>
-    val cb = aclCallback[Tuple2[Stat,Seq[ZKAccessControlEntry]],T](connection,k,(_:Int,_:String,_:Object,jacl:JList[ACL],stat:Stat) => (stat,toSeqZKAccessControlEntry(jacl)).successNel)
+  def statAndACL:Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]] = {
+    val p = emptyPromise[Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]]](Strategy.Sequential)
+    val cb = aclCallback[Tuple2[Stat,Seq[ZKAccessControlEntry]]](connection,p,(_:Int,_:String,_:Object,jacl:JList[ACL],stat:Stat) => (stat,toSeqZKAccessControlEntry(jacl)).successNel)
     val statIn = new Stat()
     connection.withWrapped(_.getACL(path,statIn,cb,this))
+    p.get
   }
 
-  def children[T] = shift { k:(Result[Seq[String]] => T) =>
-    val cb = children2Callback[Seq[String],T](connection,k,(_:Int,_:String,_:Object,children:JList[String],_:Stat) => children.toSeq.successNel)
+  def children:Result[Seq[String]] = {
+    val p = emptyPromise[Result[Seq[String]]](Strategy.Sequential)
+    val cb = children2Callback[Seq[String]](connection,p,(_:Int,_:String,_:Object,children:JList[String],_:Stat) => children.toSeq.successNel)
     connection.withWrapped(_.getChildren(path,true,cb,this))
+    p.get
   }
 
-  def data[T] = shift { k:(Result[Array[Byte]] => T) =>
-    val cb = dataCallback[Array[Byte],T](connection,k,(_:Int,_:String,_:Object,data:Array[Byte],_:Stat) => data.successNel)
+  def data:Result[Array[Byte]] = {
+    val p = emptyPromise[Result[Array[Byte]]](Strategy.Sequential)
+    val cb = dataCallback[Array[Byte]](connection,p,(_:Int,_:String,_:Object,data:Array[Byte],_:Stat) => data.successNel)
     connection.withWrapped(_.getData(path,true,cb,this))
+    p.get
   }
 }
 
@@ -64,23 +78,31 @@ class ZKPathReader(val path:String,val connection:ZKReader) extends ZKPathBase[Z
 
 class ZKPathWriter(val path:String,val connection:ZKWriter) extends ZKPathBase[ZKWriter] {
   import ZKCallbacks._
-  def create[T](data:Array[Byte],acl:Seq[ZKAccessControlEntry], createMode:CreateMode) = shift { k:(Result[String] => T) =>
-    val cb = createCallback[String,T](connection,data,acl,createMode,k,(_:Int,_:String,_:Object,name:String) => name.successNel)
+  def create(data:Array[Byte],acl:Seq[ZKAccessControlEntry], createMode:CreateMode):Result[String] = {
+    val p = emptyPromise[Result[String]](Strategy.Sequential)
+    val cb = createCallback[String](connection,data,acl,createMode,p,(_:Int,_:String,_:Object,name:String) => name.successNel)
     connection.withWrapped(_.create(path,data,acl,createMode,cb,this))
+    p.get
   }
 
-  def delete[T](version:ZKVersion = anyVersion) = shift { k:(Result[Unit] => T) =>
-    val cb = deleteCallback[Unit,T](connection,version,k,(_:Int,_:String,_:Object) => ().successNel)
+  def delete(version:ZKVersion = anyVersion):Result[Unit] = {
+    val p = emptyPromise[Result[Unit]](Strategy.Sequential)
+    val cb = deleteCallback[Unit](connection,version,p,(_:Int,_:String,_:Object) => ().successNel)
     connection.withWrapped(_.delete(path,version.value,cb,this))
+    p.get
   }
 
-  def update[T](data:Array[Byte],version:ZKVersion) = shift { k:(Result[Unit] => T) =>
-    val cb = setDataCallback[Unit,T](connection,data,version,k,(_:Int,_:String,_:Object,_:Stat) => ().successNel)
+  def update(data:Array[Byte],version:ZKVersion):Result[Unit] = {
+    val p = emptyPromise[Result[Unit]](Strategy.Sequential)
+    val cb = setDataCallback[Unit](connection,data,version,p,(_:Int,_:String,_:Object,_:Stat) => ().successNel)
     connection.withWrapped(_.setData(path,data,version.value,cb,this))
+    p.get
   }
 
-  def updateACL[T](acl:Seq[ZKAccessControlEntry],version:ZKVersion) = shift { k:(Result[Unit] => T) =>
-    val cb = setAclCallback[Unit,T](connection,acl,version,k,(_:Int,_:String,_:Object,_:Stat) => ().successNel)
+  def updateACL(acl:Seq[ZKAccessControlEntry],version:ZKVersion):Result[Unit] = {
+    val p = emptyPromise[Result[Unit]](Strategy.Sequential)
+    val cb = setAclCallback[Unit](connection,acl,version,p,(_:Int,_:String,_:Object,_:Stat) => ().successNel)
     connection.withWrapped(_.setACL(path,acl,version.value,cb,this))
+    p.get
   }
 }

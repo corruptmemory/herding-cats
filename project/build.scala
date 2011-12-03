@@ -30,9 +30,7 @@ object BuildSettings {
                       Seq (organization := buildOrganization,
                            scalaVersion := buildScalaVersion,
                            version      := buildVersion,
-                           shellPrompt  := ShellPrompt.buildShellPrompt,
-                           autoCompilerPlugins := true,
-                           scalacOptions += "-P:continuations:enable")
+                           shellPrompt  := ShellPrompt.buildShellPrompt)
 }
 
 object ShellPrompt {

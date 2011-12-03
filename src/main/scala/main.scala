@@ -20,10 +20,6 @@
 
 package com.corruptmemory.herding_cats
 
-import scala.util.continuations._
-
-/** Just a silly test used to explore how the continuations plugin works
- */
 object Main {
   import scalaz._
   import Scalaz._
@@ -35,10 +31,11 @@ object Main {
 
   def foo:Unit = withZK("/test/control",ZK("127.0.0.1:2181",5000)) {
     (shutdowner,zk) => {
+      println("HERE!")
       val path = zk.path("/foo")
       val path1 = zk.path("/bar")
-      val data = path.data[Unit]
-      val data1 = path1.data[Unit]
+      val data = path.data
+      val data1 = path1.data
       ((data.map(new String(_)) |@| data1.map(new String(_))) apply (printer _)).fold(failure = f => println("Failure: %s".format(f)),
                                                                                       success = _ => println("Success"))
     }

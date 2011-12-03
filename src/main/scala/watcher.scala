@@ -20,7 +20,6 @@
 
 package com.corruptmemory.herding_cats
 
-import scala.util.continuations._
 import org.apache.zookeeper.{ZooKeeper, Watcher, AsyncCallback, WatchedEvent}
 import AsyncCallback.{ACLCallback, Children2Callback, ChildrenCallback, DataCallback, StatCallback, StringCallback, VoidCallback}
 import scalaz._

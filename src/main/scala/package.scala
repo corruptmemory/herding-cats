@@ -24,4 +24,9 @@ package object herding_cats extends ZKVersions
                             with ZKACL
                             with Zookeepers
                             with Errors
-                            with Results
+                            with Results {
+  import scalaz._
+  import scalaz.concurrent._
+  import Scalaz._
+  def emptyPromise[A](implicit s: Strategy) = new Promise[A]()(s)
+}
