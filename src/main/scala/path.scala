@@ -32,45 +32,38 @@ sealed trait ZKPathBase[T <: ZK] {
   import ZKCallbacks._
   def path:String
   def connection:T
-  def stat:Result[Stat] = {
-    println("stat")
+  def stat:Promise[Result[Stat]] = {
     val p = emptyPromise[Result[Stat]](Strategy.Sequential)
-    println("p")
     val cb = statCallback[Stat](connection,p,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
-    println("cb")
     connection.withWrapped(_.exists(path,true,cb,this))
-    println("connection.withWrapped(_.exists(path,true,cb,this))")
-    Thread.sleep(3000)
-    println("Slept")
-    p.get
+    p
   }
 
-  def exists:Boolean = {
-    println("exists")
-    stat.fold(failure = _ => false,
-              success = s => s != null)
+  def exists:Promise[Boolean] = {
+    stat.map(_.fold(failure = _ => false,
+                    success = s => s != null))
   }
 
-  def statAndACL:Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]] = {
+  def statAndACL:Promise[Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]]] = {
     val p = emptyPromise[Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]]](Strategy.Sequential)
     val cb = aclCallback[Tuple2[Stat,Seq[ZKAccessControlEntry]]](connection,p,(_:Int,_:String,_:Object,jacl:JList[ACL],stat:Stat) => (stat,toSeqZKAccessControlEntry(jacl)).successNel)
     val statIn = new Stat()
     connection.withWrapped(_.getACL(path,statIn,cb,this))
-    p.get
+    p
   }
 
-  def children:Result[Seq[String]] = {
+  def children:Promise[Result[Seq[String]]] = {
     val p = emptyPromise[Result[Seq[String]]](Strategy.Sequential)
     val cb = children2Callback[Seq[String]](connection,p,(_:Int,_:String,_:Object,children:JList[String],_:Stat) => children.toSeq.successNel)
     connection.withWrapped(_.getChildren(path,true,cb,this))
-    p.get
+    p
   }
 
-  def data:Result[Array[Byte]] = {
+  def data:Promise[Result[Array[Byte]]] = {
     val p = emptyPromise[Result[Array[Byte]]](Strategy.Sequential)
     val cb = dataCallback[Array[Byte]](connection,p,(_:Int,_:String,_:Object,data:Array[Byte],_:Stat) => data.successNel)
     connection.withWrapped(_.getData(path,true,cb,this))
-    p.get
+    p
   }
 }
 
@@ -78,31 +71,31 @@ class ZKPathReader(val path:String,val connection:ZKReader) extends ZKPathBase[Z
 
 class ZKPathWriter(val path:String,val connection:ZKWriter) extends ZKPathBase[ZKWriter] {
   import ZKCallbacks._
-  def create(data:Array[Byte],acl:Seq[ZKAccessControlEntry], createMode:CreateMode):Result[String] = {
+  def create(data:Array[Byte],acl:Seq[ZKAccessControlEntry], createMode:CreateMode):Promise[Result[String]] = {
     val p = emptyPromise[Result[String]](Strategy.Sequential)
     val cb = createCallback[String](connection,data,acl,createMode,p,(_:Int,_:String,_:Object,name:String) => name.successNel)
     connection.withWrapped(_.create(path,data,acl,createMode,cb,this))
-    p.get
+    p
   }
 
-  def delete(version:ZKVersion = anyVersion):Result[Unit] = {
+  def delete(version:ZKVersion = anyVersion):Promise[Result[Unit]] = {
     val p = emptyPromise[Result[Unit]](Strategy.Sequential)
     val cb = deleteCallback[Unit](connection,version,p,(_:Int,_:String,_:Object) => ().successNel)
     connection.withWrapped(_.delete(path,version.value,cb,this))
-    p.get
+    p
   }
 
-  def update(data:Array[Byte],version:ZKVersion):Result[Unit] = {
+  def update(data:Array[Byte],version:ZKVersion):Promise[Result[Unit]] = {
     val p = emptyPromise[Result[Unit]](Strategy.Sequential)
     val cb = setDataCallback[Unit](connection,data,version,p,(_:Int,_:String,_:Object,_:Stat) => ().successNel)
     connection.withWrapped(_.setData(path,data,version.value,cb,this))
-    p.get
+    p
   }
 
-  def updateACL(acl:Seq[ZKAccessControlEntry],version:ZKVersion):Result[Unit] = {
+  def updateACL(acl:Seq[ZKAccessControlEntry],version:ZKVersion):Promise[Result[Unit]] = {
     val p = emptyPromise[Result[Unit]](Strategy.Sequential)
     val cb = setAclCallback[Unit](connection,acl,version,p,(_:Int,_:String,_:Object,_:Stat) => ().successNel)
     connection.withWrapped(_.setACL(path,acl,version.value,cb,this))
-    p.get
+    p
   }
 }

@@ -25,6 +25,7 @@ import scalaz._
 import Scalaz._
 import concurrent._
 
+
 final class Shutdowner(wrapped:Object) {
   def shutdown() {
     wrapped.synchronized {
@@ -35,20 +36,19 @@ final class Shutdowner(wrapped:Object) {
 
 trait Zookeepers {
   import Zookeepers._
+
   def withZK(controlPath:String,factory:(String,WatchedEvent => Unit) => ZKReader)(body:(Shutdowner,ZKReader) => Unit) {
     import Watcher.Event.{KeeperState,EventType}
     val syncObject = new Object
     val shutdowner = new Shutdowner(syncObject)
     var zk:ZKReader = null
     def watcher(event:WatchedEvent) {
-      println("TWO")
       event.getState match {
         case KeeperState.SyncConnected => watchControlNode(zk,controlPath)(body(shutdowner,zk))
         case KeeperState.Expired | KeeperState.AuthFailed => shutdowner.shutdown()
         case x@_ => () // Some other condition that we can ignore.  Need logging!
       }
     }
-    println("ONE")
     zk = factory(controlPath,watcher _)
     syncObject.synchronized {
       syncObject.wait()
@@ -76,20 +76,24 @@ final class ZKWriter(val controlPath:String,wrapped:ZooKeeper) extends ZK(wrappe
 
 object Zookeepers {
   def watchControlNode(zk:ZKReader,controlPath:String)(cont: => Unit):Unit = {
-    println("watchControlNode")
     val path = zk.path(controlPath)
-    if (!path.exists) zk.withWriter(_.path(controlPath).create(Array[Byte]('1'.toByte),toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL))
-    else {
-      val data = path.data
-      println("%s: %s".format(controlPath,data.map(new String(_))))
-      data.map(new String(_)).foreach(e => if (e == "1") cont)
+    for {
+      exists <- path.exists
+    } yield {
+      if (!exists) zk.withWriter(_.path(controlPath).create(Array[Byte]('1'.toByte),toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL))
+      for {
+        data <- path.data
+      } yield {
+        println("%s: %s".format(controlPath,data.map(new String(_))))
+        data.map(new String(_)).foreach(e => if (e == "1") cont)
+      }
     }
   }
 
-  def enableWatches(zk:ZKReader,controlPath:String):Result[Unit] =
+  def enableWatches(zk:ZKReader,controlPath:String):Promise[Result[Unit]] =
     zk.withWriter(_.path(controlPath).update(Array[Byte]('1'.toByte),anyVersion))
 
-  def disableWatches(zk:ZKReader,controlPath:String):Result[Unit] =
+  def disableWatches(zk:ZKReader,controlPath:String):Promise[Result[Unit]] =
     zk.withWriter(_.path(controlPath).update(Array[Byte]('0'.toByte),anyVersion))
 }
 

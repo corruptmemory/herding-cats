@@ -48,13 +48,9 @@ object ZKCallbacks {
 
   class StatCallbackW[T](zk:ZK,promise:Promise[Result[T]],responder:(Int,String,Object,Stat)=>Result[T]) extends StatCallback {
     def processResult(rc:Int,path:String,ctx:Object,stat:Stat):Unit = {
-      println("StatCallbackW.processResult")
       val result = rcWrap(path,rc)(responder(rc,path,ctx,stat))
       if (!done(result)) zk.withWrapped(_.exists(path,true,this,ctx))
-      else {
-        println("fulfill stat")
-        promise.fulfill(result)
-      }
+      else promise.fulfill(result)
     }
   }
 
@@ -115,7 +111,8 @@ object ZKCallbacks {
     }
   }
 
-  def statCallback[T](zk:ZK,promise:Promise[Result[T]],responder:(Int,String,Object,Stat)=>Result[T]):StatCallbackW[T] = new StatCallbackW[T](zk,promise,responder)
+  def statCallback[T](zk:ZK,promise:Promise[Result[T]],responder:(Int,String,Object,Stat)=>Result[T]):StatCallbackW[T] =
+    new StatCallbackW[T](zk,promise,responder)
   def setDataCallback[T](zk:ZK,data:Array[Byte],version:ZKVersion,promise:Promise[Result[T]],responder:(Int,String,Object,Stat)=>Result[T]):SetDataCallbackW[T] =
     new SetDataCallbackW[T](zk,data,version,promise,responder)
   def setAclCallback[T](zk:ZK,acl:JList[ACL],version:ZKVersion,promise:Promise[Result[T]],responder:(Int,String,Object,Stat)=>Result[T]):SetAclCallbackW[T] =
