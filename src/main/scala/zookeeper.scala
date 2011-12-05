@@ -77,13 +77,9 @@ final class ZKWriter(val controlPath:String,wrapped:ZooKeeper) extends ZK(wrappe
 object Zookeepers {
   def watchControlNode(zk:ZKReader,controlPath:String)(cont: => Unit):Unit = {
     val path = zk.path(controlPath)
-    for {
-      exists <- path.exists
-    } yield {
+    path.exists >>= { exists =>
       if (!exists) zk.withWriter(_.path(controlPath).create(Array[Byte]('1'.toByte),toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL))
-      for {
-        data <- path.data
-      } yield {
+      path.data map { data =>
         println("%s: %s".format(controlPath,data.map(new String(_))))
         data.map(new String(_)).foreach(e => if (e == "1") cont)
       }
