@@ -79,10 +79,7 @@ object Zookeepers {
     val path = zk.path(controlPath)
     path.exists >>= { exists =>
       if (!exists) zk.withWriter(_.path(controlPath).create(Array[Byte]('1'.toByte),toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL))
-      path.data map { data =>
-        println("%s: %s".format(controlPath,data.map(new String(_))))
-        data.map(new String(_)).foreach(e => if (e == "1") cont)
-      }
+      path.data map (data => data.map(new String(_)).foreach(e => if (e == "1") cont))
     }
   }
 

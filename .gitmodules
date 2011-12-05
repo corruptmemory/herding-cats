@@ -1,0 +1,3 @@
+[submodule "scalaz"]
+	path = scalaz
+	url = git@github.com:corruptmemory/scalaz.git
