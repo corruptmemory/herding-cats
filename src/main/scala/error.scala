@@ -27,6 +27,7 @@ case class Uncaught(throwable:Throwable) extends Error
 case object Disconnected extends Error
 case object NoNode extends Error
 case object VersionMismatch extends Error
+case object Shutdown extends Error
 
 trait Errors {
   def message(m:String):Error = Message(m)

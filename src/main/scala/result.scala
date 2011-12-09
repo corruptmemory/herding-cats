@@ -20,8 +20,25 @@
 
 package com.corruptmemory.herding_cats
 import scalaz._
+import scalaz.concurrent._
 import Scalaz._
 
 trait Results {
   type Result[T] = ValidationNEL[Error,T]
+  type PromisedResult[T] = Promise[Result[T]]
+
+    implicit def PromisedResultBind: Bind[PromisedResult] = new Bind[PromisedResult] {
+    def bind[A, B](r: PromisedResult[A], f: A => PromisedResult[B]) = r flatMap{v =>
+      v.fold(failure = { a =>
+               val p = emptyPromise[Result[B]](Strategy.Sequential)
+               p fulfill a.fail[B]
+               p
+             },
+             success = s => f(s))
+           }
+  }
+
+  implicit def PromisedResultFunctor: Functor[PromisedResult] = new Functor[PromisedResult] {
+    def fmap[A, B](r: PromisedResult[A], f: A => B):PromisedResult[B] = r.map(_ map f)
+  }
 }

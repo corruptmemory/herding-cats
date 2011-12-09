@@ -19,33 +19,41 @@
  */
 
 package com.corruptmemory.herding_cats
+import org.apache.zookeeper.data.Stat
 import org.apache.zookeeper.{ZooKeeper,Watcher,WatchedEvent,CreateMode,ZooDefs}
 import ZooDefs.Ids
 import scalaz._
 import Scalaz._
 import concurrent._
 
-
-final class Shutdowner(wrapped:Object) {
-  def shutdown() {
-    wrapped.synchronized {
-      wrapped.notifyAll()
-    }
-  }
-}
-
 trait Zookeepers {
+  type ZKState[S,A] = StateT[PromisedResult,S,A]
+  type ZKOp[A,S,B] = Kleisli[({type λ[x]=ZKState[S, x]})#λ,A,B]
+
   import Zookeepers._
 
-  def withZK(controlPath:String,factory:(String,WatchedEvent => Unit) => ZKReader)(body:(Shutdowner,ZKReader) => Unit) {
+  def zkOp[A,S,B](f:A => ZKState[S, B]):ZKOp[A,S,B] =
+    kleisli[({type λ[x]=ZKState[S, x]})#λ,A,B](f)
+
+  def withZK[S](controlPath:String,factory:(String,WatchedEvent => Unit) => ZK,initial:S)(body:ZKOp[ZK,S,Unit]) {
     import Watcher.Event.{KeeperState,EventType}
     val syncObject = new Object
-    val shutdowner = new Shutdowner(syncObject)
-    var zk:ZKReader = null
+    var zk:ZK = null
+    def shutdown() {
+      syncObject.synchronized {
+        syncObject.notifyAll()
+      }
+    }
     def watcher(event:WatchedEvent) {
       event.getState match {
-        case KeeperState.SyncConnected => watchControlNode(zk,controlPath)(body(shutdowner,zk))
-        case KeeperState.Expired | KeeperState.AuthFailed => shutdowner.shutdown()
+        case KeeperState.SyncConnected =>
+          (watchControlNode[S](zk,controlPath)(body) apply initial) map {
+            _.fold(failure = f =>
+                     if (f.list.exists(_ match { case Shutdown => true; case _ => false })) shutdown()
+                     else (),
+                   success = _ => ())
+          }
+        case KeeperState.Expired | KeeperState.AuthFailed => shutdown()
         case x@_ => () // Some other condition that we can ignore.  Need logging!
       }
     }
@@ -53,43 +61,60 @@ trait Zookeepers {
     syncObject.synchronized {
       syncObject.wait()
     }
-    zk.withWrapped(_.close)
+    zk.withWrapped(_.close())
   }
 }
 
-sealed abstract class ZK(wrapped:ZooKeeper) {
-  def controlPath:String
-  def id:Long = wrapped.getSessionId
-  def password:Array[Byte] = wrapped.getSessionPasswd
-  def timeout:Int = wrapped.getSessionTimeout
-  def withWrapped[T](f:ZooKeeper => T):T = f(wrapped)
-}
+final class ZK(val controlPath:String, wrapped:ZooKeeper) {
+  type ZKWriterOp[S,B] = ZKOp[ZKWriter[S],S,B]
+  final class ZKReader[S](conn:ZK) {
+    def path(p:String):ZKPathReader[S] = new ZKPathReader[S](p,conn)
+  }
 
-final class ZKReader(val controlPath:String,wrapped:ZooKeeper) extends ZK(wrapped) {
-  def path(p:String):ZKPathReader = new ZKPathReader(p,this)
-  def withWriter[T](body:ZKWriter => T):T = body(new ZKWriter(controlPath,wrapped))
-}
+  final class ZKWriter[S](conn:ZK) {
+    def path(p:String):ZKPathWriter[S] = new ZKPathWriter[S](p,conn)
+  }
 
-final class ZKWriter(val controlPath:String,wrapped:ZooKeeper) extends ZK(wrapped) {
-  def path(p:String):ZKPathWriter = new ZKPathWriter(p,this)
+  private[herding_cats] def withWrapped[T](f:ZooKeeper => T):T = f(wrapped)
+
+  def id:Long = withWrapped(_.getSessionId)
+  def password:Array[Byte] = withWrapped(_.getSessionPasswd)
+  def timeout:Int = withWrapped(_.getSessionTimeout)
+
+  def reader[S]:ZKReader[S] = new ZKReader[S](this)
+  def withWriter[S,B](body:ZKWriterOp[S,B]):ZKState[S,B] = body(new ZKWriter[S](this))
+
+  def getWatchesState[S]:ZKState[S,Array[Byte]] =
+    reader.path(controlPath).data
+
+  def setWatchesState[S](state:Array[Byte]):ZKState[S,Stat] =
+    withWriter[S,Stat](zkOp[ZKWriter[S],S,Stat](_.path(controlPath).update(state,anyVersion)))
+
+  def enableWatches[S]:ZKState[S,Stat] =
+    withWriter[S,Stat](zkOp[ZKWriter[S],S,Stat](_.path(controlPath).update(Array[Byte]('1'.toByte),anyVersion)))
+
+  def disableWatches[S]:ZKState[S,Stat] =
+    withWriter[S,Stat](zkOp[ZKWriter[S],S,Stat](_.path(controlPath).update(Array[Byte]('0'.toByte),anyVersion)))
+
+  def createControlNode[S]:ZKState[S,String] =
+    withWriter[S,String](zkOp[ZKWriter[S],S,String](_.path(controlPath).create(Array[Byte]('1'.toByte),toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL)))
 }
 
 object Zookeepers {
-  def watchControlNode(zk:ZKReader,controlPath:String)(cont: => Unit):Unit = {
-    val path = zk.path(controlPath)
-    path.exists >>= { exists =>
-      if (!exists) zk.withWriter(_.path(controlPath).create(Array[Byte]('1'.toByte),toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL))
-      path.data map (data => data.map(new String(_)).foreach(e => if (e == "1") cont))
-    }
+  def watchControlNode[S](zk:ZK,controlPath:String)(body:ZKOp[ZK,S,Unit]):ZKState[S,Unit] = {
+    val path = zk.reader[S].path(controlPath)
+    for {
+      _ <- path.notExists(zk.createControlNode map (_ => ()))
+      _ <- path.data >>= (d => if ((new String(d))=="1") body(zk) else stateT[PromisedResult,S,Unit] { s =>
+            val np = emptyPromise[Result[(S,Unit)]](Strategy.Sequential)
+            np fulfill (s,()).successNel[Error]
+            np
+          })
+    } yield ()
   }
-
-  def enableWatches(zk:ZKReader,controlPath:String):Promise[Result[Unit]] =
-    zk.withWriter(_.path(controlPath).update(Array[Byte]('1'.toByte),anyVersion))
-
-  def disableWatches(zk:ZKReader,controlPath:String):Promise[Result[Unit]] =
-    zk.withWriter(_.path(controlPath).update(Array[Byte]('0'.toByte),anyVersion))
 }
 
 object ZK {
-  def apply(connectString:String,sessionTimeout:Int)(controlPath:String,watcher:WatchedEvent => Unit):ZKReader = new ZKReader(controlPath,new ZooKeeper(connectString,sessionTimeout,ZKWatcher(watcher)))
+  def apply(connectString:String,sessionTimeout:Int)(controlPath:String,watcher:WatchedEvent => Unit):ZK =
+    new ZK(controlPath,new ZooKeeper(connectString,sessionTimeout,ZKWatcher(watcher)))
 }

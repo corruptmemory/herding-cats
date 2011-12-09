@@ -28,74 +28,122 @@ import scalaz._
 import scalaz.concurrent._
 import Scalaz._
 
-sealed trait ZKPathBase[T <: ZK] {
+sealed trait ZKPathBase[S] {
+  type ZKState1[A] = ZKState[S,A]
+
+  // Questionable
+  final class ZKState1W[A](zks:ZKState1[A]) {
+    def withFilter(p:A => Boolean):ZKState1[A] = {
+      zks.flatMap { a =>
+        if (p(a)) zks
+        else {
+          stateT[PromisedResult,S,A] { s =>
+            val np = emptyPromise[Result[(S,A)]](Strategy.Sequential)
+            np fulfill (s,a).successNel[Error]
+            np
+          }
+        }
+      }
+    }
+  }
+
+  implicit def toZKState1W[A](zks:ZKState1[A]):ZKState1W[A] =
+    new ZKState1W[A](zks)
+
   import ZKCallbacks._
   def path:String
-  def connection:T
-  def stat:Promise[Result[Stat]] = {
-    val p = emptyPromise[Result[Stat]](Strategy.Sequential)
-    val cb = statCallback[Stat](connection,p,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
-    connection.withWrapped(_.exists(path,true,cb,this))
-    p
+  def connection:ZK
+
+  def makePromise[A](f:PromisedResult[A] => Unit):ZKState1[A] = {
+    val p = emptyPromise[Result[A]](Strategy.Sequential)
+    f(p)
+    stateT[PromisedResult,S,A](s => p map (r => r map (a => (s,a))))
   }
 
-  def exists:Promise[Boolean] = {
-    stat.map(_.fold(failure = _ => false,
-                    success = s => s != null))
-  }
 
-  def statAndACL:Promise[Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]]] = {
-    val p = emptyPromise[Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]]](Strategy.Sequential)
-    val cb = aclCallback[Tuple2[Stat,Seq[ZKAccessControlEntry]]](connection,p,(_:Int,_:String,_:Object,jacl:JList[ACL],stat:Stat) => (stat,toSeqZKAccessControlEntry(jacl)).successNel)
-    val statIn = new Stat()
-    connection.withWrapped(_.getACL(path,statIn,cb,this))
-    p
-  }
+  def stat:ZKState1[Stat] =
+    makePromise[Stat] { p =>
+      val cb = statCallback(connection,p,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
+      connection.withWrapped(_.exists(path,true,cb,this))
+    }
 
-  def children:Promise[Result[Seq[String]]] = {
-    val p = emptyPromise[Result[Seq[String]]](Strategy.Sequential)
-    val cb = children2Callback[Seq[String]](connection,p,(_:Int,_:String,_:Object,children:JList[String],_:Stat) => children.toSeq.successNel)
-    connection.withWrapped(_.getChildren(path,true,cb,this))
-    p
-  }
+  // def exists(f:ZKState1[Unit]):ZKState1[Unit] =
+  //   stat.flatMap{s =>
+  //     if (s != null) f
+  //     else stateT[PromisedResult,S,Unit] { s =>
+  //       val p = emptyPromise[Result[(S,Unit)]](Strategy.Sequential)
+  //       p fulfill (s,()).successNel[Error]
+  //       p
+  //     }
+  //   }
 
-  def data:Promise[Result[Array[Byte]]] = {
-    val p = emptyPromise[Result[Array[Byte]]](Strategy.Sequential)
-    val cb = dataCallback[Array[Byte]](connection,p,(_:Int,_:String,_:Object,data:Array[Byte],_:Stat) => data.successNel)
-    connection.withWrapped(_.getData(path,true,cb,this))
-    p
-  }
+  // def notExists(f:ZKState1[Unit]):ZKState1[Unit] =
+  //   stat.flatMap{s =>
+  //     if (s == null) f
+  //     else stateT[PromisedResult,S,Unit] { s =>
+  //       val p = emptyPromise[Result[(S,Unit)]](Strategy.Sequential)
+  //       p fulfill (s,()).successNel[Error]
+  //       p
+  //     }
+  //   }
+
+  def exists(f:ZKState1[Unit]):ZKState1[Unit] =
+    for {
+      s <- stat if s != null
+      _ <- f
+    } yield ()
+
+  def notExists(f:ZKState1[Unit]):ZKState1[Unit] =
+    for {
+      s <- stat if s == null
+      _ <- f
+    } yield ()
+
+  def statAndACL:ZKState1[Tuple2[Stat,Seq[ZKAccessControlEntry]]] =
+    makePromise[Tuple2[Stat,Seq[ZKAccessControlEntry]]] { p =>
+      val cb = aclCallback(connection,p,(_:Int,_:String,_:Object,jacl:JList[ACL],stat:Stat) => (stat,toSeqZKAccessControlEntry(jacl)).successNel)
+      val statIn = new Stat()
+      connection.withWrapped(_.getACL(path,statIn,cb,this))
+    }
+
+  def children:ZKState1[Traversable[String]] =
+    makePromise[Traversable[String]] { p =>
+      val cb = children2Callback(connection,p,(_:Int,_:String,_:Object,children:JList[String],_:Stat) => children.toSeq.successNel)
+      connection.withWrapped(_.getChildren(path,true,cb,this))
+    }
+
+  def data:ZKState1[Array[Byte]] =
+    makePromise[Array[Byte]] { p =>
+      val cb = dataCallback(connection,p,(_:Int,_:String,_:Object,data:Array[Byte],_:Stat) => data.successNel)
+      connection.withWrapped(_.getData(path,true,cb,this))
+    }
 }
 
-class ZKPathReader(val path:String,val connection:ZKReader) extends ZKPathBase[ZKReader]
+class ZKPathReader[S](val path:String,val connection:ZK) extends ZKPathBase[S]
 
-class ZKPathWriter(val path:String,val connection:ZKWriter) extends ZKPathBase[ZKWriter] {
+class ZKPathWriter[S](val path:String,val connection:ZK) extends ZKPathBase[S] {
   import ZKCallbacks._
-  def create(data:Array[Byte],acl:Seq[ZKAccessControlEntry], createMode:CreateMode):Promise[Result[String]] = {
-    val p = emptyPromise[Result[String]](Strategy.Sequential)
-    val cb = createCallback[String](connection,data,acl,createMode,p,(_:Int,_:String,_:Object,name:String) => name.successNel)
-    connection.withWrapped(_.create(path,data,acl,createMode,cb,this))
-    p
-  }
+  def create(data:Array[Byte],acl:Seq[ZKAccessControlEntry], createMode:CreateMode):ZKState1[String] =
+    makePromise[String] { p =>
+      val cb = createCallback(connection,data,acl,createMode,p,(_:Int,_:String,_:Object,name:String) => name.successNel)
+      connection.withWrapped(_.create(path,data,acl,createMode,cb,this))
+    }
 
-  def delete(version:ZKVersion = anyVersion):Promise[Result[Unit]] = {
-    val p = emptyPromise[Result[Unit]](Strategy.Sequential)
-    val cb = deleteCallback[Unit](connection,version,p,(_:Int,_:String,_:Object) => ().successNel)
-    connection.withWrapped(_.delete(path,version.value,cb,this))
-    p
-  }
+  def delete(version:ZKVersion = anyVersion):ZKState1[Unit] =
+    makePromise[Unit] { p =>
+      val cb = deleteCallback(connection,version,p,(_:Int,_:String,_:Object) => ().successNel)
+      connection.withWrapped(_.delete(path,version.value,cb,this))
+    }
 
-  def update(data:Array[Byte],version:ZKVersion):Promise[Result[Unit]] = {
-    val p = emptyPromise[Result[Unit]](Strategy.Sequential)
-    val cb = setDataCallback[Unit](connection,data,version,p,(_:Int,_:String,_:Object,_:Stat) => ().successNel)
-    connection.withWrapped(_.setData(path,data,version.value,cb,this))
-    p
-  }
+  def update(data:Array[Byte],version:ZKVersion):ZKState1[Stat] =
+    makePromise[Stat] { p =>
+      val cb = setDataCallback(connection,data,version,p,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
+      connection.withWrapped(_.setData(path,data,version.value,cb,this))
+    }
 
-  def updateACL(acl:Seq[ZKAccessControlEntry],version:ZKVersion):Promise[Result[Unit]] = {
-    val p = emptyPromise[Result[Unit]](Strategy.Sequential)
-    val cb = setAclCallback[Unit](connection,acl,version,p,(_:Int,_:String,_:Object,_:Stat) => ().successNel)
-    connection.withWrapped(_.setACL(path,acl,version.value,cb,this))
-    p
-  }
+  def updateACL(acl:Seq[ZKAccessControlEntry],version:ZKVersion):ZKState1[Stat] =
+    makePromise[Stat] { p =>
+      val cb = setAclCallback(connection,acl,version,p,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
+      connection.withWrapped(_.setACL(path,acl,version.value,cb,this))
+    }
 }

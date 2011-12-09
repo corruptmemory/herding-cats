@@ -46,7 +46,7 @@ object ZKCallbacks {
                   case _ => true
                 })
 
-  class StatCallbackW[T](zk:ZK,promise:Promise[Result[T]],responder:(Int,String,Object,Stat)=>Result[T]) extends StatCallback {
+  class StatCallbackW(zk:ZK,promise:PromisedResult[Stat],responder:(Int,String,Object,Stat)=>Result[Stat]) extends StatCallback {
     def processResult(rc:Int,path:String,ctx:Object,stat:Stat):Unit = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,stat))
       if (!done(result)) zk.withWrapped(_.exists(path,true,this,ctx))
@@ -54,7 +54,7 @@ object ZKCallbacks {
     }
   }
 
-  class SetDataCallbackW[T](zk:ZK,data:Array[Byte],version:ZKVersion,promise:Promise[Result[T]],responder:(Int,String,Object,Stat)=>Result[T]) extends StatCallback {
+  class SetDataCallbackW(zk:ZK,data:Array[Byte],version:ZKVersion,promise:PromisedResult[Stat],responder:(Int,String,Object,Stat)=>Result[Stat]) extends StatCallback {
     def processResult(rc:Int,path:String,ctx:Object,stat:Stat):Unit = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,stat))
       if (!done(result)) zk.withWrapped(_.setData(path,data,version.value,this,ctx))
@@ -62,7 +62,7 @@ object ZKCallbacks {
     }
   }
 
-  class SetAclCallbackW[T](zk:ZK,acl:JList[ACL],version:ZKVersion,promise:Promise[Result[T]],responder:(Int,String,Object,Stat)=>Result[T]) extends StatCallback {
+  class SetAclCallbackW(zk:ZK,acl:JList[ACL],version:ZKVersion,promise:PromisedResult[Stat],responder:(Int,String,Object,Stat)=>Result[Stat]) extends StatCallback {
     def processResult(rc:Int,path:String,ctx:Object,stat:Stat):Unit = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,stat))
       if (!done(result)) zk.withWrapped(_.setACL(path,acl,version.value,this,ctx))
@@ -70,7 +70,7 @@ object ZKCallbacks {
     }
   }
 
-  class ACLCallbackW[T](zk:ZK,promise:Promise[Result[T]],responder:((Int,String,Object,JList[ACL],Stat)=>Result[T])) extends ACLCallback {
+  class ACLCallbackW(zk:ZK,promise:PromisedResult[Tuple2[Stat,Seq[ZKAccessControlEntry]]],responder:((Int,String,Object,JList[ACL],Stat)=>Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]])) extends ACLCallback {
     def processResult(rc:Int,path:String,ctx:Object,acl:JList[ACL],stat:Stat):Unit = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,acl,stat))
       val statIn = new Stat()
@@ -79,7 +79,7 @@ object ZKCallbacks {
     }
   }
 
-  class Children2CallbackW[T](zk:ZK,promise:Promise[Result[T]],responder:((Int,String,Object,JList[String],Stat)=>Result[T])) extends Children2Callback {
+  class Children2CallbackW(zk:ZK,promise:PromisedResult[Traversable[String]],responder:((Int,String,Object,JList[String],Stat)=>Result[Traversable[String]])) extends Children2Callback {
     def processResult(rc:Int,path:String,ctx:Object,children:JList[String],stat:Stat)  = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,children,stat))
       if (!done(result)) zk.withWrapped(_.getChildren(path,true,this,ctx))
@@ -87,7 +87,7 @@ object ZKCallbacks {
     }
   }
 
-  class DataCallbackW[T](zk:ZK,promise:Promise[Result[T]],responder:((Int,String,Object,Array[Byte],Stat)=>Result[T])) extends DataCallback {
+  class DataCallbackW(zk:ZK,promise:PromisedResult[Array[Byte]],responder:((Int,String,Object,Array[Byte],Stat)=>Result[Array[Byte]])) extends DataCallback {
     def processResult(rc:Int,path:String,ctx:Object,data:Array[Byte],stat:Stat):Unit = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,data,stat))
       if (!done(result)) zk.withWrapped(_.getData(path,true,this,ctx))
@@ -95,7 +95,7 @@ object ZKCallbacks {
     }
   }
 
-  class CreateCallbackW[T](zk:ZK,data:Array[Byte],acl:JList[ACL],createMode:CreateMode,promise:Promise[Result[T]],responder:((Int,String,Object,String)=>Result[T])) extends StringCallback {
+  class CreateCallbackW(zk:ZK,data:Array[Byte],acl:JList[ACL],createMode:CreateMode,promise:PromisedResult[String],responder:((Int,String,Object,String)=>Result[String])) extends StringCallback {
     def processResult(rc:Int,path:String, ctx:Object, name:String):Unit = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,name))
       if (!done(result)) zk.withWrapped(_.create(path,data,acl,createMode,this,ctx))
@@ -103,7 +103,7 @@ object ZKCallbacks {
     }
   }
 
-  class DeleteCallbackW[T](zk:ZK,version:ZKVersion,promise:Promise[Result[T]],responder:((Int,String,Object)=>Result[T])) extends VoidCallback {
+  class DeleteCallbackW(zk:ZK,version:ZKVersion,promise:PromisedResult[Unit],responder:((Int,String,Object)=>Result[Unit])) extends VoidCallback {
     def processResult(rc:Int,path:String,ctx:Object):Unit = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx))
       if (!done(result)) zk.withWrapped(_.delete(path,version.value,this,ctx))
@@ -111,17 +111,20 @@ object ZKCallbacks {
     }
   }
 
-  def statCallback[T](zk:ZK,promise:Promise[Result[T]],responder:(Int,String,Object,Stat)=>Result[T]):StatCallbackW[T] =
-    new StatCallbackW[T](zk,promise,responder)
-  def setDataCallback[T](zk:ZK,data:Array[Byte],version:ZKVersion,promise:Promise[Result[T]],responder:(Int,String,Object,Stat)=>Result[T]):SetDataCallbackW[T] =
-    new SetDataCallbackW[T](zk,data,version,promise,responder)
-  def setAclCallback[T](zk:ZK,acl:JList[ACL],version:ZKVersion,promise:Promise[Result[T]],responder:(Int,String,Object,Stat)=>Result[T]):SetAclCallbackW[T] =
-    new SetAclCallbackW[T](zk,acl,version,promise,responder)
-  def aclCallback[T](zk:ZK,promise:Promise[Result[T]],responder:(Int,String,Object,JList[ACL],Stat)=>Result[T]):ACLCallbackW[T] = new ACLCallbackW[T](zk,promise,responder)
-  def children2Callback[T](zk:ZK,promise:Promise[Result[T]],responder:(Int,String,Object,JList[String],Stat)=>Result[T]):Children2CallbackW[T] =
-    new Children2CallbackW[T](zk,promise,responder)
-  def dataCallback[T](zk:ZK,promise:Promise[Result[T]],responder:(Int,String,Object,Array[Byte],Stat)=>Result[T]):DataCallbackW[T] = new DataCallbackW[T](zk,promise,responder)
-  def createCallback[T](zk:ZK,data:Array[Byte],acl:JList[ACL],createMode:CreateMode,promise:Promise[Result[T]],responder:(Int,String,Object,String)=>Result[T]):CreateCallbackW[T] = new CreateCallbackW[T](zk,data,acl,createMode,promise,responder)
-  def deleteCallback[T](zk:ZK,version:ZKVersion,promise:Promise[Result[T]],responder:(Int,String,Object)=>Result[T]):DeleteCallbackW[T] =
-    new DeleteCallbackW[T](zk,version,promise,responder)
+  def statCallback(zk:ZK,promise:PromisedResult[Stat],responder:(Int,String,Object,Stat)=>Result[Stat]):StatCallbackW =
+    new StatCallbackW(zk,promise,responder)
+  def setDataCallback(zk:ZK,data:Array[Byte],version:ZKVersion,promise:PromisedResult[Stat],responder:(Int,String,Object,Stat)=>Result[Stat]):SetDataCallbackW =
+    new SetDataCallbackW(zk,data,version,promise,responder)
+  def setAclCallback(zk:ZK,acl:JList[ACL],version:ZKVersion,promise:PromisedResult[Stat],responder:(Int,String,Object,Stat)=>Result[Stat]):SetAclCallbackW =
+    new SetAclCallbackW(zk,acl,version,promise,responder)
+  def aclCallback(zk:ZK,promise:PromisedResult[Tuple2[Stat,Seq[ZKAccessControlEntry]]],responder:(Int,String,Object,JList[ACL],Stat)=>Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]]):ACLCallbackW =
+    new ACLCallbackW(zk,promise,responder)
+  def children2Callback(zk:ZK,promise:PromisedResult[Traversable[String]],responder:(Int,String,Object,JList[String],Stat)=>Result[Traversable[String]]):Children2CallbackW =
+    new Children2CallbackW(zk,promise,responder)
+  def dataCallback(zk:ZK,promise:PromisedResult[Array[Byte]],responder:(Int,String,Object,Array[Byte],Stat)=>Result[Array[Byte]]):DataCallbackW =
+    new DataCallbackW(zk,promise,responder)
+  def createCallback(zk:ZK,data:Array[Byte],acl:JList[ACL],createMode:CreateMode,promise:PromisedResult[String],responder:(Int,String,Object,String)=>Result[String]):CreateCallbackW =
+    new CreateCallbackW(zk,data,acl,createMode,promise,responder)
+  def deleteCallback(zk:ZK,version:ZKVersion,promise:PromisedResult[Unit],responder:(Int,String,Object)=>Result[Unit]):DeleteCallbackW =
+    new DeleteCallbackW(zk,version,promise,responder)
 }
