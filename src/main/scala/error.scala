@@ -36,4 +36,5 @@ trait Errors {
   def disconnected:Error = Disconnected
   def nonode:Error = NoNode
   def versionmismatch:Error = VersionMismatch
+  def shutdown:Error = Shutdown
 }

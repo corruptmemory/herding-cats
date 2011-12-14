@@ -35,7 +35,8 @@ object Main {
       val path1 = zk.reader[Unit].path("/bar")
       for {
         data <- path.data[String]()
-        data1<- path1.data[String]()
+        data1<- path1.data[String](false)
+        // _ <- shutdownUnit
       } yield printer(data,data1)
   }
 

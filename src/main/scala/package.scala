@@ -32,6 +32,9 @@ package object herding_cats extends ZKVersions
   import Scalaz._
   def emptyPromise[A](implicit s: Strategy):Promise[A] = new Promise[A]()(s)
 
-  def promiseUnit[S]:StateT[PromisedResult, S, Unit] = 
+  def promiseUnit[S]:ZKState[S, Unit] = 
     stateT[PromisedResult,S,Unit](s => promise((s,()).successNel[Error]))
+
+  def shutdownUnit[S]:ZKState[S, Unit] = 
+    stateT[PromisedResult,S,Unit](s => promise(shutdown.failNel[(S,Unit)]))
 }
