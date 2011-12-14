@@ -1,5 +1,5 @@
 /**
- * ace.scala
+ * serialization.scala
  *
  * @author <a href="mailto:jim@corruptmemory.com">Jim Powers</a>
  *
@@ -19,15 +19,22 @@
  */
 
 package com.corruptmemory.herding_cats
-import org.apache.zookeeper.data.{Id}
+import scalaz._
+import Scalaz._
 
-case class ZKAccessControlEntry(id:Id,perms:Int)
+trait ZKSerialize[T] {
+  def write(x:T):Array[Byte]
+  def read(x:Array[Byte]):ValidationNEL[Error,T]
+}
 
-trait ZKACL {
-  import org.apache.zookeeper.data.{ACL}
-  import java.util.{List=>JList}
-  import scala.collection.JavaConversions._
+object ZKSerialize {
+  def write[T](x:T)(implicit s:ZKSerialize[T]):Array[Byte] = s.write(x)
+  def read[T](x:Array[Byte])(implicit s:ZKSerialize[T]):ValidationNEL[Error,T] = s.read(x)
+}
 
-  implicit def toJListAcl(in:Seq[ZKAccessControlEntry]):JList[ACL] = in.map(x => new ACL(x.perms,x.id))
-  def toSeqZKAccessControlEntry(in:JList[ACL]):Seq[ZKAccessControlEntry] = in.map((x:ACL) => new ZKAccessControlEntry(x.getId,x.getPerms))
+trait ZKSerializers {
+  implicit def byteArraySerializer:ZKSerialize[Array[Byte]] = new ZKSerialize[Array[Byte]] {
+    def write(x:Array[Byte]):Array[Byte] = x
+    def read(x:Array[Byte]):ValidationNEL[Error,Array[Byte]] = x.successNel
+  }
 }

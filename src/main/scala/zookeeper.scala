@@ -35,6 +35,8 @@ trait Zookeepers {
   def zkOp[A,S,B](f:A => ZKState[S, B]):ZKOp[A,S,B] =
     kleisli[({type λ[x]=ZKState[S, x]})#λ,A,B](f)
 
+  implicit def toBody[S](f:ZK => ZKState[S, Unit]):ZKOp[ZK,S,Unit] = zkOp[ZK,S,Unit](f)
+
   def withZK[S](controlPath:String,factory:(String,WatchedEvent => Unit) => ZK,initial:S)(body:ZKOp[ZK,S,Unit]) {
     import Watcher.Event.{KeeperState,EventType}
     val syncObject = new Object
@@ -85,7 +87,7 @@ final class ZK(val controlPath:String, wrapped:ZooKeeper) {
   def withWriter[S,B](body:ZKWriterOp[S,B]):ZKState[S,B] = body(new ZKWriter[S](this))
 
   def getWatchesState[S]:ZKState[S,Array[Byte]] =
-    reader.path(controlPath).data
+    reader.path(controlPath).data[Array[Byte]]
 
   def setWatchesState[S](state:Array[Byte]):ZKState[S,Stat] =
     withWriter[S,Stat](zkOp[ZKWriter[S],S,Stat](_.path(controlPath).update(state,anyVersion)))
@@ -104,12 +106,7 @@ object Zookeepers {
   def watchControlNode[S](zk:ZK,controlPath:String)(body:ZKOp[ZK,S,Unit]):ZKState[S,Unit] = {
     val path = zk.reader[S].path(controlPath)
     for {
-      _ <- path.notExists(zk.createControlNode map (_ => ()))
-      _ <- path.data >>= (d => if ((new String(d))=="1") body(zk) else stateT[PromisedResult,S,Unit] { s =>
-            val np = emptyPromise[Result[(S,Unit)]](Strategy.Sequential)
-            np fulfill (s,()).successNel[Error]
-            np
-          })
+      _ <- path.exists (path.data >>= (d => if ((new String(d))=="1") body(zk) else promiseUnit[S])) (zk.createControlNode map (_ => ()))
     } yield ()
   }
 }

@@ -1,5 +1,5 @@
 /**
- * ace.scala
+ * sbinary_utils.scala
  *
  * @author <a href="mailto:jim@corruptmemory.com">Jim Powers</a>
  *
@@ -19,15 +19,19 @@
  */
 
 package com.corruptmemory.herding_cats
-import org.apache.zookeeper.data.{Id}
+import scalaz._
+import Scalaz._
 
-case class ZKAccessControlEntry(id:Id,perms:Int)
+trait SBinaryUtils {
+  import sbinary._
+  import Operations._
 
-trait ZKACL {
-  import org.apache.zookeeper.data.{ACL}
-  import java.util.{List=>JList}
-  import scala.collection.JavaConversions._
-
-  implicit def toJListAcl(in:Seq[ZKAccessControlEntry]):JList[ACL] = in.map(x => new ACL(x.perms,x.id))
-  def toSeqZKAccessControlEntry(in:JList[ACL]):Seq[ZKAccessControlEntry] = in.map((x:ACL) => new ZKAccessControlEntry(x.getId,x.getPerms))
+  implicit def sbinarySerializer[T : Writes : Reads]:ZKSerialize[T] = new ZKSerialize[T] {
+    def write(x:T):Array[Byte] = toByteArray[T](x)
+    def read(x:Array[Byte]):ValidationNEL[Error,T] = try {
+      fromByteArray(x).successNel
+    } catch {
+      case t:Throwable => uncaught(t).failNel
+    }
+  }
 }

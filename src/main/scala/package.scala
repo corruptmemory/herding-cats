@@ -24,9 +24,15 @@ package object herding_cats extends ZKVersions
                             with ZKACL
                             with Zookeepers
                             with Errors
-                            with Results {
+                            with Results
+                            with StateTs
+                            with SBinaryUtils
+                            with ZKSerializers {
   import scalaz._
   import scalaz.concurrent._
   import Scalaz._
-  def emptyPromise[A](implicit s: Strategy) = new Promise[A]()(s)
+  def emptyPromise[A](implicit s: Strategy):Promise[A] = new Promise[A]()(s)
+
+  def promiseUnit[S]:StateT[PromisedResult, S, Unit] = 
+    stateT[PromisedResult,S,Unit](s => promise((s,()).successNel[Error]))
 }

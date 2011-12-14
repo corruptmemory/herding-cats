@@ -31,25 +31,6 @@ import Scalaz._
 sealed trait ZKPathBase[S] {
   type ZKState1[A] = ZKState[S,A]
 
-  // Questionable
-  final class ZKState1W[A](zks:ZKState1[A]) {
-    def withFilter(p:A => Boolean):ZKState1[A] = {
-      zks.flatMap { a =>
-        if (p(a)) zks
-        else {
-          stateT[PromisedResult,S,A] { s =>
-            val np = emptyPromise[Result[(S,A)]](Strategy.Sequential)
-            np fulfill (s,a).successNel[Error]
-            np
-          }
-        }
-      }
-    }
-  }
-
-  implicit def toZKState1W[A](zks:ZKState1[A]):ZKState1W[A] =
-    new ZKState1W[A](zks)
-
   import ZKCallbacks._
   def path:String
   def connection:ZK
@@ -60,44 +41,17 @@ sealed trait ZKPathBase[S] {
     stateT[PromisedResult,S,A](s => p map (r => r map (a => (s,a))))
   }
 
-
   def stat:ZKState1[Stat] =
     makePromise[Stat] { p =>
       val cb = statCallback(connection,p,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
       connection.withWrapped(_.exists(path,true,cb,this))
     }
 
-  // def exists(f:ZKState1[Unit]):ZKState1[Unit] =
-  //   stat.flatMap{s =>
-  //     if (s != null) f
-  //     else stateT[PromisedResult,S,Unit] { s =>
-  //       val p = emptyPromise[Result[(S,Unit)]](Strategy.Sequential)
-  //       p fulfill (s,()).successNel[Error]
-  //       p
-  //     }
-  //   }
-
-  // def notExists(f:ZKState1[Unit]):ZKState1[Unit] =
-  //   stat.flatMap{s =>
-  //     if (s == null) f
-  //     else stateT[PromisedResult,S,Unit] { s =>
-  //       val p = emptyPromise[Result[(S,Unit)]](Strategy.Sequential)
-  //       p fulfill (s,()).successNel[Error]
-  //       p
-  //     }
-  //   }
-
-  def exists(f:ZKState1[Unit]):ZKState1[Unit] =
-    for {
-      s <- stat if s != null
-      _ <- f
-    } yield ()
-
-  def notExists(f:ZKState1[Unit]):ZKState1[Unit] =
-    for {
-      s <- stat if s == null
-      _ <- f
-    } yield ()
+  def exists(a: => ZKState1[Unit])(b: => ZKState1[Unit]):ZKState1[Unit] = {
+    val stat = connection.withWrapped(_.exists(path,true))
+    if (stat != null) a
+    else b
+  }
 
   def statAndACL:ZKState1[Tuple2[Stat,Seq[ZKAccessControlEntry]]] =
     makePromise[Tuple2[Stat,Seq[ZKAccessControlEntry]]] { p =>
@@ -112,9 +66,10 @@ sealed trait ZKPathBase[S] {
       connection.withWrapped(_.getChildren(path,true,cb,this))
     }
 
-  def data:ZKState1[Array[Byte]] =
-    makePromise[Array[Byte]] { p =>
-      val cb = dataCallback(connection,p,(_:Int,_:String,_:Object,data:Array[Byte],_:Stat) => data.successNel)
+  def data[T : ZKSerialize]:ZKState1[T] =
+    makePromise[T] { p =>
+      import ZKSerialize._
+      val cb = dataCallback[T](connection,p,(_:Int,_:String,_:Object,data:Array[Byte],_:Stat) => read[T](data))
       connection.withWrapped(_.getData(path,true,cb,this))
     }
 }
@@ -135,10 +90,12 @@ class ZKPathWriter[S](val path:String,val connection:ZK) extends ZKPathBase[S] {
       connection.withWrapped(_.delete(path,version.value,cb,this))
     }
 
-  def update(data:Array[Byte],version:ZKVersion):ZKState1[Stat] =
+  def update[T : ZKSerialize](data:T,version:ZKVersion):ZKState1[Stat] =
     makePromise[Stat] { p =>
-      val cb = setDataCallback(connection,data,version,p,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
-      connection.withWrapped(_.setData(path,data,version.value,cb,this))
+      import ZKSerialize._
+      val arrayData = write[T](data)
+      val cb = setDataCallback(connection,arrayData,version,p,(_:Int,_:String,_:Object,stat:Stat) => stat.successNel)
+      connection.withWrapped(_.setData(path,arrayData,version.value,cb,this))
     }
 
   def updateACL(acl:Seq[ZKAccessControlEntry],version:ZKVersion):ZKState1[Stat] =

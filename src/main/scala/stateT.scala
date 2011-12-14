@@ -1,5 +1,5 @@
 /**
- * ace.scala
+ * stateT.scala
  *
  * @author <a href="mailto:jim@corruptmemory.com">Jim Powers</a>
  *
@@ -19,15 +19,22 @@
  */
 
 package com.corruptmemory.herding_cats
-import org.apache.zookeeper.data.{Id}
+import scalaz._
+import Scalaz._
 
-case class ZKAccessControlEntry(id:Id,perms:Int)
+trait StateTs {
+  def initT[F[_],S](implicit p:Pointed[F]): StateT[F, S, S] =
+    stateT[F, S, S](s => p.pure((s, s)))
 
-trait ZKACL {
-  import org.apache.zookeeper.data.{ACL}
-  import java.util.{List=>JList}
-  import scala.collection.JavaConversions._
+  def modifyT[F[_],S](f: S => S)(implicit p:Pointed[F], b:Bind[F]):StateT[F, S, Unit] =
+    initT[F,S] flatMap (s => stateT[F,S,Unit](_ => p.pure((f(s), ()))))
 
-  implicit def toJListAcl(in:Seq[ZKAccessControlEntry]):JList[ACL] = in.map(x => new ACL(x.perms,x.id))
-  def toSeqZKAccessControlEntry(in:JList[ACL]):Seq[ZKAccessControlEntry] = in.map((x:ACL) => new ZKAccessControlEntry(x.getId,x.getPerms))
+  def putT[F[_],S](s: S)(implicit p:Pointed[F]):StateT[F, S, Unit] =
+    stateT[F, S, Unit](_ => p.pure((s, ())))
+
+  def getsT[F[_],S,A](f: S => A)(implicit p:Pointed[F]): StateT[F, S, A] =
+    for (s <- initT[F,S]) yield f(s)
+
+  def passT[F[_],S](implicit p:Pointed[F], b:Bind[F]): StateT[F, S, Unit] =
+    modifyT((x:S) => x)
 }

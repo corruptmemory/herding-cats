@@ -87,7 +87,7 @@ object ZKCallbacks {
     }
   }
 
-  class DataCallbackW(zk:ZK,promise:PromisedResult[Array[Byte]],responder:((Int,String,Object,Array[Byte],Stat)=>Result[Array[Byte]])) extends DataCallback {
+  class DataCallbackW[T](zk:ZK,promise:PromisedResult[T],responder:((Int,String,Object,Array[Byte],Stat)=>Result[T])) extends DataCallback {
     def processResult(rc:Int,path:String,ctx:Object,data:Array[Byte],stat:Stat):Unit = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,data,stat))
       if (!done(result)) zk.withWrapped(_.getData(path,true,this,ctx))
@@ -99,7 +99,10 @@ object ZKCallbacks {
     def processResult(rc:Int,path:String, ctx:Object, name:String):Unit = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,name))
       if (!done(result)) zk.withWrapped(_.create(path,data,acl,createMode,this,ctx))
-      else promise.fulfill(result)
+      else {
+        println("created: %s".format(path))
+        promise.fulfill(result)
+      }
     }
   }
 
@@ -121,8 +124,8 @@ object ZKCallbacks {
     new ACLCallbackW(zk,promise,responder)
   def children2Callback(zk:ZK,promise:PromisedResult[Traversable[String]],responder:(Int,String,Object,JList[String],Stat)=>Result[Traversable[String]]):Children2CallbackW =
     new Children2CallbackW(zk,promise,responder)
-  def dataCallback(zk:ZK,promise:PromisedResult[Array[Byte]],responder:(Int,String,Object,Array[Byte],Stat)=>Result[Array[Byte]]):DataCallbackW =
-    new DataCallbackW(zk,promise,responder)
+  def dataCallback[T](zk:ZK,promise:PromisedResult[T],responder:(Int,String,Object,Array[Byte],Stat)=>Result[T]):DataCallbackW[T] =
+    new DataCallbackW[T](zk,promise,responder)
   def createCallback(zk:ZK,data:Array[Byte],acl:JList[ACL],createMode:CreateMode,promise:PromisedResult[String],responder:(Int,String,Object,String)=>Result[String]):CreateCallbackW =
     new CreateCallbackW(zk,data,acl,createMode,promise,responder)
   def deleteCallback(zk:ZK,version:ZKVersion,promise:PromisedResult[Unit],responder:(Int,String,Object)=>Result[Unit]):DeleteCallbackW =

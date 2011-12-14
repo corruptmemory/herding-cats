@@ -66,11 +66,12 @@ object Dependencies {
   val scalaCheckVersion = "1.9"
   val scalaZVersion = "6.0.3"
   val zookeeperVersion = "3.3.3"
+  val sbinaryVersion = "0.4.1-SNAPSHOT"
 
   val scalaz = "org.scalaz" %% "scalaz-core" % scalaZVersion
   val scalaCheck = "org.scala-tools.testing" %% "scalacheck" % scalaCheckVersion % "test"
   val zookeeper = "org.apache.zookeeper" % "zookeeper" % zookeeperVersion
-  val continuationsPlugin = compilerPlugin("org.scala-lang.plugins" % "continuations" % "2.9.1")
+  val sbinary = "org.scala-tools.sbinary" %% "sbinary" % sbinaryVersion
 }
 
 object ArticleServiceBuild extends Build {
@@ -80,7 +81,7 @@ object ArticleServiceBuild extends Build {
   import BuildSettings._
   import Resolvers._
 
-  val coreDeps = Seq(scalaz,scalaCheck,zookeeper,continuationsPlugin)
+  val coreDeps = Seq(scalaz,scalaCheck,zookeeper,sbinary)
 
   lazy val herdingCats = Project("herding-cats",file("."),
                                     settings = buildSettings ++ Seq(name := "Herding Cats",
