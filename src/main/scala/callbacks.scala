@@ -46,10 +46,10 @@ object ZKCallbacks {
                   case _ => true
                 })
 
-  class StatCallbackW(zk:ZK,promise:PromisedResult[Stat],responder:(Int,String,Object,Stat)=>Result[Stat]) extends StatCallback {
+  class StatCallbackW(zk:ZK,watch:Boolean,promise:PromisedResult[Stat],responder:(Int,String,Object,Stat)=>Result[Stat]) extends StatCallback {
     def processResult(rc:Int,path:String,ctx:Object,stat:Stat):Unit = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,stat))
-      if (!done(result)) zk.withWrapped(_.exists(path,true,this,ctx))
+      if (!done(result)) zk.withWrapped(_.exists(path,watch,this,ctx))
       else promise.fulfill(result)
     }
   }
@@ -79,18 +79,18 @@ object ZKCallbacks {
     }
   }
 
-  class Children2CallbackW(zk:ZK,promise:PromisedResult[Traversable[String]],responder:((Int,String,Object,JList[String],Stat)=>Result[Traversable[String]])) extends Children2Callback {
+  class Children2CallbackW(zk:ZK,watch:Boolean,promise:PromisedResult[Traversable[String]],responder:((Int,String,Object,JList[String],Stat)=>Result[Traversable[String]])) extends Children2Callback {
     def processResult(rc:Int,path:String,ctx:Object,children:JList[String],stat:Stat)  = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,children,stat))
-      if (!done(result)) zk.withWrapped(_.getChildren(path,true,this,ctx))
+      if (!done(result)) zk.withWrapped(_.getChildren(path,watch,this,ctx))
       else promise.fulfill(result)
     }
   }
 
-  class DataCallbackW[T](zk:ZK,promise:PromisedResult[T],responder:((Int,String,Object,Array[Byte],Stat)=>Result[T])) extends DataCallback {
+  class DataCallbackW[T](zk:ZK,watch:Boolean,promise:PromisedResult[T],responder:((Int,String,Object,Array[Byte],Stat)=>Result[T])) extends DataCallback {
     def processResult(rc:Int,path:String,ctx:Object,data:Array[Byte],stat:Stat):Unit = {
       val result = rcWrap(path,rc)(responder(rc,path,ctx,data,stat))
-      if (!done(result)) zk.withWrapped(_.getData(path,true,this,ctx))
+      if (!done(result)) zk.withWrapped(_.getData(path,watch,this,ctx))
       else promise.fulfill(result)
     }
   }
@@ -114,18 +114,18 @@ object ZKCallbacks {
     }
   }
 
-  def statCallback(zk:ZK,promise:PromisedResult[Stat],responder:(Int,String,Object,Stat)=>Result[Stat]):StatCallbackW =
-    new StatCallbackW(zk,promise,responder)
+  def statCallback(zk:ZK,watch:Boolean,promise:PromisedResult[Stat],responder:(Int,String,Object,Stat)=>Result[Stat]):StatCallbackW =
+    new StatCallbackW(zk,watch,promise,responder)
   def setDataCallback(zk:ZK,data:Array[Byte],version:ZKVersion,promise:PromisedResult[Stat],responder:(Int,String,Object,Stat)=>Result[Stat]):SetDataCallbackW =
     new SetDataCallbackW(zk,data,version,promise,responder)
   def setAclCallback(zk:ZK,acl:JList[ACL],version:ZKVersion,promise:PromisedResult[Stat],responder:(Int,String,Object,Stat)=>Result[Stat]):SetAclCallbackW =
     new SetAclCallbackW(zk,acl,version,promise,responder)
   def aclCallback(zk:ZK,promise:PromisedResult[Tuple2[Stat,Seq[ZKAccessControlEntry]]],responder:(Int,String,Object,JList[ACL],Stat)=>Result[Tuple2[Stat,Seq[ZKAccessControlEntry]]]):ACLCallbackW =
     new ACLCallbackW(zk,promise,responder)
-  def children2Callback(zk:ZK,promise:PromisedResult[Traversable[String]],responder:(Int,String,Object,JList[String],Stat)=>Result[Traversable[String]]):Children2CallbackW =
-    new Children2CallbackW(zk,promise,responder)
-  def dataCallback[T](zk:ZK,promise:PromisedResult[T],responder:(Int,String,Object,Array[Byte],Stat)=>Result[T]):DataCallbackW[T] =
-    new DataCallbackW[T](zk,promise,responder)
+  def children2Callback(zk:ZK,watch:Boolean,promise:PromisedResult[Traversable[String]],responder:(Int,String,Object,JList[String],Stat)=>Result[Traversable[String]]):Children2CallbackW =
+    new Children2CallbackW(zk,watch,promise,responder)
+  def dataCallback[T](zk:ZK,watch:Boolean,promise:PromisedResult[T],responder:(Int,String,Object,Array[Byte],Stat)=>Result[T]):DataCallbackW[T] =
+    new DataCallbackW[T](zk,watch,promise,responder)
   def createCallback(zk:ZK,data:Array[Byte],acl:JList[ACL],createMode:CreateMode,promise:PromisedResult[String],responder:(Int,String,Object,String)=>Result[String]):CreateCallbackW =
     new CreateCallbackW(zk,data,acl,createMode,promise,responder)
   def deleteCallback(zk:ZK,version:ZKVersion,promise:PromisedResult[Unit],responder:(Int,String,Object)=>Result[Unit]):DeleteCallbackW =

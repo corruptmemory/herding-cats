@@ -86,28 +86,24 @@ final class ZK(val controlPath:String, wrapped:ZooKeeper) {
   def reader[S]:ZKReader[S] = new ZKReader[S](this)
   def withWriter[S,B](body:ZKWriterOp[S,B]):ZKState[S,B] = body(new ZKWriter[S](this))
 
-  def getWatchesState[S]:ZKState[S,Array[Byte]] =
-    reader.path(controlPath).data[Array[Byte]]
+  def getWatchesState[S]:ZKState[S,String] =
+    reader.path(controlPath).data[String]()
 
-  def setWatchesState[S](state:Array[Byte]):ZKState[S,Stat] =
+  def setWatchesState[S](state:String):ZKState[S,Stat] =
     withWriter[S,Stat](zkOp[ZKWriter[S],S,Stat](_.path(controlPath).update(state,anyVersion)))
 
-  def enableWatches[S]:ZKState[S,Stat] =
-    withWriter[S,Stat](zkOp[ZKWriter[S],S,Stat](_.path(controlPath).update(Array[Byte]('1'.toByte),anyVersion)))
+  def enableWatches[S]:ZKState[S,Stat] = setWatchesState[S]("1")
 
-  def disableWatches[S]:ZKState[S,Stat] =
-    withWriter[S,Stat](zkOp[ZKWriter[S],S,Stat](_.path(controlPath).update(Array[Byte]('0'.toByte),anyVersion)))
+  def disableWatches[S]:ZKState[S,Stat] = setWatchesState[S]("0")
 
   def createControlNode[S]:ZKState[S,String] =
-    withWriter[S,String](zkOp[ZKWriter[S],S,String](_.path(controlPath).create(Array[Byte]('1'.toByte),toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL)))
+    withWriter[S,String](zkOp[ZKWriter[S],S,String](_.path(controlPath).create("1",toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL)))
 }
 
 object Zookeepers {
   def watchControlNode[S](zk:ZK,controlPath:String)(body:ZKOp[ZK,S,Unit]):ZKState[S,Unit] = {
     val path = zk.reader[S].path(controlPath)
-    for {
-      _ <- path.exists (path.data >>= (d => if ((new String(d))=="1") body(zk) else promiseUnit[S])) (zk.createControlNode map (_ => ()))
-    } yield ()
+    path.exists() (path.data[String]() >>= (d => if (d == "1") body(zk) else promiseUnit[S])) (zk.createControlNode map (_ => ()))
   }
 }
 

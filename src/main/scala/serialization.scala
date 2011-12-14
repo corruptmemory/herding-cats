@@ -37,4 +37,9 @@ trait ZKSerializers {
     def write(x:Array[Byte]):Array[Byte] = x
     def read(x:Array[Byte]):ValidationNEL[Error,Array[Byte]] = x.successNel
   }
+
+  implicit def stringSerializer:ZKSerialize[String] = new ZKSerialize[String] {
+    def write(x:String):Array[Byte] = x.getBytes
+    def read(x:Array[Byte]):ValidationNEL[Error,String] = (new String(x)).successNel
+  }
 }

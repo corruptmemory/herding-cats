@@ -26,7 +26,6 @@ package object herding_cats extends ZKVersions
                             with Errors
                             with Results
                             with StateTs
-                            with SBinaryUtils
                             with ZKSerializers {
   import scalaz._
   import scalaz.concurrent._

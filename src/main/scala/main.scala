@@ -23,23 +23,21 @@ package com.corruptmemory.herding_cats
 object Main {
   import scalaz._
   import Scalaz._
-  import sbinary._
-  import DefaultProtocol._
 
   def printer(data:String,data1:String) {
     println("Data: %s".format(data))
     println("Data1: %s".format(data1))
   }
 
-  def foo:Unit = withZK[Unit]("/test/control",ZK("127.0.0.1:2181",5000),())(toBody({
+  def foo:Unit = withZK[Unit]("/test/control",ZK("127.0.0.1:2181",5000),()) {
     (zk:ZK) =>
       val path = zk.reader[Unit].path("/foo")
       val path1 = zk.reader[Unit].path("/bar")
       for {
-        data <- path.data[Array[Byte]]
-        data1<- path1.data[Array[Byte]]
-      } yield printer(new String(data),new String(data1))
-  }))
+        data <- path.data[String]()
+        data1<- path1.data[String]()
+      } yield printer(data,data1)
+  }
 
   def main(args:Array[String]) {
     foo

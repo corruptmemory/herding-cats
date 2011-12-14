@@ -22,7 +22,7 @@ package com.corruptmemory.herding_cats
 import scalaz._
 import Scalaz._
 
-trait SBinaryUtils {
+object SBinaryUtils {
   import sbinary._
   import Operations._
 
