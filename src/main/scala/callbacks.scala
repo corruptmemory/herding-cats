@@ -31,17 +31,18 @@ object ZKCallbacks {
   import org.apache.zookeeper.KeeperException.Code
   def rcWrap[T](path:String,rc:Int)(result: => Result[T]):Result[T] = Code.get(rc) match {
     case Code.OK => result
-    case Code.SESSIONEXPIRED | Code.NOAUTH => disconnected.failNel
-    case Code.BADVERSION => versionmismatch.failNel
-    case Code.NONODE => nonode.failNel
+    case Code.SESSIONEXPIRED | Code.NOAUTH => disconnected.fail
+    case Code.BADVERSION => versionMismatch.fail
+    case Code.NONODE => noNode.fail
+    case Code.NODEEXISTS => nodeExists.fail
     case x@_ => {
       println("'%s' not OK: %s".format(path,x.toString))
-      message("'%s' not OK: %s".format(path,x.toString)).failNel
+      message("'%s' not OK: %s".format(path,x.toString)).fail
     }
   }
   def done[T](result:Result[T]):Boolean =
     result.fold(success = _ => true,
-                failure = f => f.list.head match {
+                failure = f => f match {
                   case Message(_) => false
                   case _ => true
                 })

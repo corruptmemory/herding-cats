@@ -24,22 +24,22 @@ import Scalaz._
 
 trait ZKSerialize[T] {
   def write(x:T):Array[Byte]
-  def read(x:Array[Byte]):ValidationNEL[Error,T]
+  def read(x:Array[Byte]):Validation[Error,T]
 }
 
 object ZKSerialize {
   def write[T](x:T)(implicit s:ZKSerialize[T]):Array[Byte] = s.write(x)
-  def read[T](x:Array[Byte])(implicit s:ZKSerialize[T]):ValidationNEL[Error,T] = s.read(x)
+  def read[T](x:Array[Byte])(implicit s:ZKSerialize[T]):Validation[Error,T] = s.read(x)
 }
 
 trait ZKSerializers {
   implicit def byteArraySerializer:ZKSerialize[Array[Byte]] = new ZKSerialize[Array[Byte]] {
     def write(x:Array[Byte]):Array[Byte] = x
-    def read(x:Array[Byte]):ValidationNEL[Error,Array[Byte]] = x.successNel
+    def read(x:Array[Byte]):Validation[Error,Array[Byte]] = x.success
   }
 
   implicit def stringSerializer:ZKSerialize[String] = new ZKSerialize[String] {
     def write(x:String):Array[Byte] = x.getBytes
-    def read(x:Array[Byte]):ValidationNEL[Error,String] = (new String(x)).successNel
+    def read(x:Array[Byte]):Validation[Error,String] = (new String(x)).success
   }
 }

@@ -28,10 +28,10 @@ object SBinaryUtils {
 
   implicit def sbinarySerializer[T : Writes : Reads]:ZKSerialize[T] = new ZKSerialize[T] {
     def write(x:T):Array[Byte] = toByteArray[T](x)
-    def read(x:Array[Byte]):ValidationNEL[Error,T] = try {
-      fromByteArray(x).successNel
+    def read(x:Array[Byte]):Validation[Error,T] = try {
+      fromByteArray(x).success
     } catch {
-      case t:Throwable => uncaught(t).failNel
+      case t:Throwable => uncaught(t).fail
     }
   }
 }

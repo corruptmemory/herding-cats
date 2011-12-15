@@ -24,7 +24,7 @@ import scalaz.concurrent._
 import Scalaz._
 
 trait Results {
-  type Result[T] = ValidationNEL[Error,T]
+  type Result[T] = Validation[Error,T]
   type PromisedResult[T] = Promise[Result[T]]
 
     implicit def PromisedResultBind: Bind[PromisedResult] = new Bind[PromisedResult] {

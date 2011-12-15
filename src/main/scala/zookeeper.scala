@@ -51,7 +51,7 @@ trait Zookeepers {
         case KeeperState.SyncConnected =>
           (watchControlNode[S](zk,controlPath)(body) apply initial) map {
             _.fold(failure = f =>
-                     if (f.list.exists(_ match { case Shutdown => true; case _ => false })) shutdown()
+                     if (f match { case Shutdown => true; case _ => false }) shutdown()
                      else (),
                    success = _ => ())
           }
@@ -97,13 +97,16 @@ final class ZK(val controlPath:String, wrapped:ZooKeeper) {
   def disableWatches[S]:ZKState[S,Stat] = setWatchesState[S]("0")
 
   def createControlNode[S]:ZKState[S,String] =
-    withWriter[S,String](zkOp[ZKWriter[S],S,String](_.path(controlPath).create("1",toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL)))
+    withWriter[S,String](zkOp[ZKWriter[S],S,String](_.path(controlPath).createIfNotExists("1",toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL)))
 }
 
 object Zookeepers {
   def watchControlNode[S](zk:ZK,controlPath:String)(body:ZKOp[ZK,S,Unit]):ZKState[S,Unit] = {
     val path = zk.reader[S].path(controlPath)
-    path.exists() (path.data[String]() >>= (d => if (d == "1") body(zk) else promiseUnit[S])) (zk.createControlNode map (_ => ()))
+    for {
+      _ <- zk.createControlNode
+      _ <- path.data[String]() >>= (d => if (d == "1") body(zk) else promiseUnit[S])
+    } yield ()
   }
 }
 
