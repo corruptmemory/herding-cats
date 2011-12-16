@@ -21,7 +21,6 @@
 package com.corruptmemory.herding_cats
 
 import org.apache.zookeeper.{ZooKeeper, Watcher, AsyncCallback, WatchedEvent}
-import AsyncCallback.{ACLCallback, Children2Callback, ChildrenCallback, DataCallback, StatCallback, StringCallback, VoidCallback}
 import scalaz._
 import Scalaz._
 
@@ -33,8 +32,10 @@ object ZKWatcher {
     }
   }
 
-  def apply(block:WatchedEvent => Unit):Watcher = new Watcher {
-    def process(event:WatchedEvent):Unit = block(event)
+  def apply[S](initial:S,block:(WatchedEvent,S) => PromisedResult[S]):Watcher = new Watcher {
+    var state:S = initial
+    def process(event:WatchedEvent):Unit =
+      block(event,state) map (_.foreach (s => state = s))
   }
 
   def watcherCallback[T](responder:WatchedEvent => T):WatcherCallbackW[T] = new WatcherCallbackW[T](responder)

@@ -41,4 +41,11 @@ trait Results {
   implicit def PromisedResultFunctor: Functor[PromisedResult] = new Functor[PromisedResult] {
     def fmap[A, B](r: PromisedResult[A], f: A => B):PromisedResult[B] = r.map(_ map f)
   }
+
+  implicit def PromisedResultPure: Pure[PromisedResult] = new Pure[PromisedResult] {
+    def pure[A](a: => A):PromisedResult[A] = promise(a.success)
+  }
+
+  implicit def PromisedResultPointed: Pointed[PromisedResult] =
+    Pointed.pointed[PromisedResult](PromisedResultFunctor, PromisedResultPure)
 }

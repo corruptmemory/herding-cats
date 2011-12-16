@@ -27,17 +27,10 @@ import Scalaz._
 import concurrent._
 
 trait Zookeepers {
-  type ZKState[S,A] = StateT[PromisedResult,S,A]
-  type ZKOp[A,S,B] = Kleisli[({type λ[x]=ZKState[S, x]})#λ,A,B]
-
   import Zookeepers._
+  type ZKState[S,A] = StateT[PromisedResult,S,A]
 
-  def zkOp[A,S,B](f:A => ZKState[S, B]):ZKOp[A,S,B] =
-    kleisli[({type λ[x]=ZKState[S, x]})#λ,A,B](f)
-
-  implicit def toBody[S](f:ZK => ZKState[S, Unit]):ZKOp[ZK,S,Unit] = zkOp[ZK,S,Unit](f)
-
-  def withZK[S](controlPath:String,factory:(String,WatchedEvent => Unit) => ZK,initial:S)(body:ZKOp[ZK,S,Unit]) {
+  def withZK[S](controlPath:String,factory:(String,S,(WatchedEvent,S) => PromisedResult[S]) => ZK,initial:S)(body:ZK => ZKState[S,Unit]) {
     import Watcher.Event.{KeeperState,EventType}
     val syncObject = new Object
     var zk:ZK = null
@@ -46,20 +39,21 @@ trait Zookeepers {
         syncObject.notifyAll()
       }
     }
-    def watcher(event:WatchedEvent) {
+    def watcher(event:WatchedEvent,state:S):PromisedResult[S] = {
       event.getState match {
         case KeeperState.SyncConnected =>
-          (watchControlNode[S](zk,controlPath)(body) apply initial) map {
-            _.fold(failure = f =>
+          (watchControlNode[S](zk,controlPath)(body) ~> state) map {
+            _.fold(failure = { f =>
                      if (f match { case Shutdown => true; case _ => false }) shutdown()
-                     else (),
-                   success = _ => ())
+                     f.fail
+                   },
+                   success = _.success)
           }
-        case KeeperState.Expired | KeeperState.AuthFailed => shutdown()
-        case x@_ => () // Some other condition that we can ignore.  Need logging!
+        case KeeperState.Expired | KeeperState.AuthFailed => {shutdown(); promise(Shutdown.fail)}
+        case x@_ => promise(message(x.toString).fail) // Some other condition that we can ignore.  Need logging!
       }
     }
-    zk = factory(controlPath,watcher _)
+    zk = factory(controlPath,initial,watcher _)
     syncObject.synchronized {
       syncObject.wait()
     }
@@ -68,7 +62,7 @@ trait Zookeepers {
 }
 
 final class ZK(val controlPath:String, wrapped:ZooKeeper) {
-  type ZKWriterOp[S,B] = ZKOp[ZKWriter[S],S,B]
+  type ZKWriterOp[S,B] = ZKWriter[S] => ZKState[S,B]
   final class ZKReader[S](conn:ZK) {
     def path(p:String):ZKPathReader[S] = new ZKPathReader[S](p,conn)
   }
@@ -90,18 +84,18 @@ final class ZK(val controlPath:String, wrapped:ZooKeeper) {
     reader.path(controlPath).data[String]()
 
   def setWatchesState[S](state:String):ZKState[S,Stat] =
-    withWriter[S,Stat](zkOp[ZKWriter[S],S,Stat](_.path(controlPath).update(state,anyVersion)))
+    withWriter[S,Stat](_.path(controlPath).update(state,anyVersion))
 
   def enableWatches[S]:ZKState[S,Stat] = setWatchesState[S]("1")
 
   def disableWatches[S]:ZKState[S,Stat] = setWatchesState[S]("0")
 
   def createControlNode[S]:ZKState[S,String] =
-    withWriter[S,String](zkOp[ZKWriter[S],S,String](_.path(controlPath).createIfNotExists("1",toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL)))
+    withWriter[S,String](_.path(controlPath).createIfNotExists("1",toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL))
 }
 
 object Zookeepers {
-  def watchControlNode[S](zk:ZK,controlPath:String)(body:ZKOp[ZK,S,Unit]):ZKState[S,Unit] = {
+  def watchControlNode[S](zk:ZK,controlPath:String)(body:ZK => ZKState[S,Unit]):ZKState[S,Unit] = {
     val path = zk.reader[S].path(controlPath)
     for {
       _ <- zk.createControlNode
@@ -111,6 +105,6 @@ object Zookeepers {
 }
 
 object ZK {
-  def apply(connectString:String,sessionTimeout:Int)(controlPath:String,watcher:WatchedEvent => Unit):ZK =
-    new ZK(controlPath,new ZooKeeper(connectString,sessionTimeout,ZKWatcher(watcher)))
+  def apply[S](connectString:String,sessionTimeout:Int)(controlPath:String,initial:S,watcher:(WatchedEvent,S) => PromisedResult[S]):ZK =
+    new ZK(controlPath,new ZooKeeper(connectString,sessionTimeout,ZKWatcher(initial,watcher)))
 }
