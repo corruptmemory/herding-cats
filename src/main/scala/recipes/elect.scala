@@ -20,26 +20,42 @@
 
 package com.corruptmemory.herding_cats.recipes
 import com.corruptmemory.herding_cats._
-import com.corruptmemory.herding_cats._
-import org.apache.zookeeper.data.Stat
-import org.apache.zookeeper.{ZooKeeper,Watcher,WatchedEvent,CreateMode,ZooDefs}
+import org.apache.zookeeper.{CreateMode,ZooDefs}
 import ZooDefs.Ids
 import scalaz._
 import Scalaz._
 import concurrent._
 
-class Elect(val path:String) {
-  var myNode:Option[String] = none
-  var prevNode:Option[String] = none
+case class Elect(node:Option[String], prevNode:Option[String], elected:Boolean)
 
-  def paticipate(conn:ZK):ZKState[Unit, String] =
-    conn.withWriter[Unit,String](_.path(path+"/node").create("1",toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL_SEQUENTIAL))
+object Elect {
+  def participate(path:String,conn:ZK):ZKState[Elect, Unit] =
+    conn.withWriter[Elect,Unit] { writer =>
+      for {
+        es <- initT[PromisedResult,Elect]
+        myNode <- writer.path(path+"/node").create("1",toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL_SEQUENTIAL)
+        children <- writer.path(path).children(false)
+        _ <- putT[PromisedResult,Elect] {
+          val prev = for {
+            z <- children.toList.toZipper
+            z <- z.findNext(_ == myNode)
+            z <- z.previous
+          } yield z.focus
+          es.copy(node = some(myNode), prevNode = prev, elected = prev.fold(some = _ => false, none = true))
+        }
+      } yield ()
+    }
 
-  def apply(conn:ZK):ZKState[Unit, Unit] = {
+  def apply(path:String)(conn:ZK):ZKState[Elect, Unit] = {
       val pathr = conn.reader[Unit].path(path)
       for {
-        _ <- myNode.fold(some = _ => passT[PromisedResult,Unit],
-                         none = paticipate(conn) map (str => myNode = some(str)))
+        es <- initT[PromisedResult,Elect]
+        _ <- es.node.fold(some = _ => passT[PromisedResult,Elect],
+                          none = participate(path,conn))
+        es <- initT[PromisedResult,Elect]
+        _ <- es.prevNode.fold(none = passT[PromisedResult,Elect], // not quite
+                              some = s => conn.reader[Elect].path(s).exists() (passT[PromisedResult,Elect]) (putT[PromisedResult,Elect](es.copy(prevNode=none,elected=true))))
+        es <- initT[PromisedResult,Elect]
       } yield ()
   }
 }
