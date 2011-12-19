@@ -26,12 +26,12 @@ object Main {
 
   def foo:Unit = withZK[Unit]("/test/control",ZK("127.0.0.1:2181",5000),()) {
     (zk:ZK) =>
-      val path = zk.reader[Unit].path("/foo")
-      val path1 = zk.reader[Unit].path("/bar")
+      val reader = zk.reader[Unit]
+      val path = reader.path("/foo")
+      val path1 = reader.path("/bar")
       for {
         data <- path.data[String]()
         data1<- path1.data[String](false)
-        // _ <- shutdownUnit
       } yield printer(data,data1)
   }
 
@@ -63,7 +63,7 @@ ZK("127.0.0.1:2181",5000)
 ```
 
 This guy produces a _connection factory_ to a ZooKeeper cluster.  The first argument to `ZK` can contain multiple endpoints
-separated by commas as documented in the [ZooKeeper constructor](http://zookeeper.apache.org/doc/r3.3.3/api/org/apache/zookeeper/ZooKeeper.html#ZooKeeper(java.lang.String, int, org.apache.zookeeper.Watcher)).
+separated by commas as documented in the [ZooKeeper constructor](http://zookeeper.apache.org/doc/r3.3.3/api/org/apache/zookeeper/ZooKeeper.html#ZooKeeper(java.lang.String, int, org.apache.zookeeper.Watcher\)).
 Example: `"127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002"`.  Endpoints are of the form `{host}:{port}`.  The second argument
 to `ZK` is the connection timeout in milliseconds.
 
@@ -77,6 +77,28 @@ that returns values of type `Result`.  A `Result` is a type alias over a Scalaz 
 promises to either succeed with returning a new value and state (via a promise, this is the bit that handles the async stuff) or you get a nice clean
 failure that you can do tests on.  One failure value of particular interest is `Shutdown`, if the function returns that value then `withZK` will exit and
 clean up.
+
+Let's look at the body:
+
+```scala
+      val reader = zk.reader[Unit]
+      val path = reader.path("/foo")
+      val path1 = reader.path("/bar")
+      for {
+        data <- path.data[String]()
+        data1<- path1.data[String](false)
+      } yield printer(data,data1)
+```
+
+From a ZK object you can get a _reader_ or you can create a _writer_ within a scope (more TBD on the writer scope as it relates to disabling watches).  From
+a _reader_ you can get a _path_ value that enables access to the data in a node identified on the given path.  The most common operation being to
+get the data contained in a node (but there are functions for getting the "stat" and children of a node).  Data stored in ZooKeeper is essentially binary, so you
+can supply arbitrary serializers for getting data into and out of a node
+(see [serialization.scala](https://github.com/corruptmemory/herding-cats/blob/master/src/main/scala/serialization.scala)).  There are also wrappers around [sbinary](https://github.com/corruptmemory/sbinary).  The above example is using simple literal `String` serialization/deserialization.  The second example from `path1` is indicating
+that is does *not* wish to watch the node at path `"/bar"`.  Again the `Unit` type in: `val reader = zk.reader[Unit]` is the type of the "state" to be transformed by
+the body.
+
+Coming: ZooKeeper-based leader elections with powah!
 
 ## License
 
