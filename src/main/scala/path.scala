@@ -53,7 +53,7 @@ sealed trait ZKPathBase[S] {
     else b
   }
 
-  def watch:ZKState1[Unit] = exists() (passT[PromisedResult,S]) (passT[PromisedResult,S])
+  def watch:ZKState1[Unit] = exists() (passT[PromisedResult,S]) (stateT[PromisedResult,S,Unit](s => promise(noNode(path).fail)))
 
   def statAndACL:ZKState1[Tuple2[Stat,Seq[ZKAccessControlEntry]]] =
     makePromise[Tuple2[Stat,Seq[ZKAccessControlEntry]]] { p =>
@@ -90,7 +90,7 @@ class ZKPathWriter[S](val path:String,val connection:ZK) extends ZKPathBase[S] {
 
   def createIfNotExists[T : ZKSerialize](data:T,acl:Seq[ZKAccessControlEntry], createMode:CreateMode):ZKState1[String] =
     stateT[PromisedResult,S,String](s => (create(data,acl,createMode) apply s) map (_.fold(failure = _ match {
-                                                                                                       case NodeExists => (s,path).success
+                                                                                                       case NodeExists(_) => (s,path).success
                                                                                                        case f@_ => f.fail
                                                                                                      },
                                                                                            success = s1 => s1.success)))

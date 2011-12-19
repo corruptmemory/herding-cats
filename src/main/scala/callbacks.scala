@@ -33,8 +33,8 @@ object ZKCallbacks {
     case Code.OK => result
     case Code.SESSIONEXPIRED | Code.NOAUTH => disconnected.fail
     case Code.BADVERSION => versionMismatch.fail
-    case Code.NONODE => noNode.fail
-    case Code.NODEEXISTS => nodeExists.fail
+    case Code.NONODE => noNode(path).fail
+    case Code.NODEEXISTS => nodeExists(path).fail
     case x@_ => {
       println("'%s' not OK: %s".format(path,x.toString))
       message("'%s' not OK: %s".format(path,x.toString)).fail
