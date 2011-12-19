@@ -53,6 +53,8 @@ sealed trait ZKPathBase[S] {
     else b
   }
 
+  def watch:ZKState1[Unit] = exists() (passT[PromisedResult,S]) (passT[PromisedResult,S])
+
   def statAndACL:ZKState1[Tuple2[Stat,Seq[ZKAccessControlEntry]]] =
     makePromise[Tuple2[Stat,Seq[ZKAccessControlEntry]]] { p =>
       val cb = aclCallback(connection,p,(_:Int,_:String,_:Object,jacl:JList[ACL],stat:Stat) => (stat,toSeqZKAccessControlEntry(jacl)).success)

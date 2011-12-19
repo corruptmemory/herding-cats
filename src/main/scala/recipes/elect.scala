@@ -32,12 +32,13 @@ object Elect {
   def participate(path:String,conn:ZK):ZKState[Elect, Unit] =
     conn.withWriter[Elect,Unit] { writer =>
       for {
-        es <- initT[PromisedResult,Elect]
+        es <- initT
         myNode <- writer.path(path+"/node").create("1",toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL_SEQUENTIAL)
+        _ <- writer.path(myNode).watch
         children <- writer.path(path).children(false)
         _ <- putT[PromisedResult,Elect] {
           val prev = for {
-            z <- children.toList.toZipper
+            z <- children.map(c => path+"/"+c).toSeq.sorted.toList.toZipper
             z <- z.findNext(_ == myNode)
             z <- z.previous
           } yield z.focus
@@ -46,16 +47,17 @@ object Elect {
       } yield ()
     }
 
-  def apply(path:String)(conn:ZK):ZKState[Elect, Unit] = {
-      val pathr = conn.reader[Unit].path(path)
+  def apply(path:String)(conn:ZK)(onElected: => Unit):ZKState[Elect, Unit] = {
+      val reader = conn.reader[Elect]
       for {
-        es <- initT[PromisedResult,Elect]
-        _ <- es.node.fold(some = _ => passT[PromisedResult,Elect],
+        es <- initT
+        _ <- es.node.fold(some = s => reader.path(s).exists() (passT[PromisedResult,Elect]) (participate(path,conn)),
                           none = participate(path,conn))
-        es <- initT[PromisedResult,Elect]
+        es <- initT
         _ <- es.prevNode.fold(none = passT[PromisedResult,Elect], // not quite
-                              some = s => conn.reader[Elect].path(s).exists() (passT[PromisedResult,Elect]) (putT[PromisedResult,Elect](es.copy(prevNode=none,elected=true))))
-        es <- initT[PromisedResult,Elect]
-      } yield ()
+                              some = s => reader.path(s).exists() (passT[PromisedResult,Elect]) (putT[PromisedResult,Elect](es.copy(prevNode=none,elected=true))))
+        es <- initT
+      } yield if (es.elected) onElected
+              else ()
   }
 }
