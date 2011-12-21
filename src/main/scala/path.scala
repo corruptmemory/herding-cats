@@ -59,15 +59,13 @@ sealed trait ZKPathBase[S] {
   /** Get the stat of a node.
     *
     * @param watch used to indicate if the node on this patch should be watched
-    *
-    * '''Warning''': Will not return if the node does not exist.
-    *                Likely I will have to change things.
+    * @return `ZKState[S,Stat]`
     */
-  def stat(watch:Boolean = true):ZKState1[Stat] =
-    makePromise[Stat] { p =>
-      val cb = statCallback(connection,watch,p,(_:Int,_:String,_:Object,stat:Stat) => stat.success)
-      connection.withWrapped(_.exists(path,watch,cb,this))
-    }
+  def stat(watch:Boolean = true):ZKState1[Stat] = {
+    val stat = connection.withWrapped(_.exists(path,watch))
+    stateT[PromisedResult,S,Stat](s => promise(if (stat != null) (s,stat).success
+                                               else noNode(path).fail)(Strategy.Sequential))
+  }
 
   /** A combinator over node existence
     *
