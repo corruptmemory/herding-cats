@@ -22,13 +22,15 @@ import scalaz._
 import scalaz.concurrent._
 import Scalaz._
 
-/** Trait for the package that defines the results of Zookeeper operations
- * 
- */
+/** Trait for the package that defines the results of Zookeeper operations */
 trait Results {
+  /** A Result is just a `Validation` over `Error` and `T` */
   type Result[T] = Validation[Error, T]
+  
+  /** Just a `Promise` of a `Result` */
   type PromisedResult[T] = Promise[Result[T]]
 
+  /** Implicit evidence of a `Bind[PromisedResult]` */
   implicit def PromisedResultBind: Bind[PromisedResult] = new Bind[PromisedResult] {
     def bind[A, B](r: PromisedResult[A], f: A => PromisedResult[B]) = r flatMap { v =>
       v.fold(failure = { a =>
@@ -40,14 +42,17 @@ trait Results {
     }
   }
 
+  /** Implicit evidence of a `Functor[PromisedResult]` */
   implicit def PromisedResultFunctor: Functor[PromisedResult] = new Functor[PromisedResult] {
     def fmap[A, B](r: PromisedResult[A], f: A => B): PromisedResult[B] = r.map(_ map f)
   }
 
+  /** Implicit evidence of a `Pure[PromisedResult]` */
   implicit def PromisedResultPure: Pure[PromisedResult] = new Pure[PromisedResult] {
     def pure[A](a: => A): PromisedResult[A] = promise(a.success)
   }
 
+  /** Implicit evidence of a `Pointed[PromisedResult]` */
   implicit def PromisedResultPointed: Pointed[PromisedResult] =
     Pointed.pointed[PromisedResult](PromisedResultFunctor, PromisedResultPure)
 }
