@@ -31,9 +31,9 @@ object ElectMain {
   import scalaz._
   import Scalaz._
 
-  def election(i:Int):Unit = withZK[Elect]("/test/election%d".format(i),ZK("127.0.0.1:2181",5000),Elect(none,none,false)) {
+  def election(i:Int):Unit = withZK[Participant]("/test/election%d".format(i),ZK("127.0.0.1:2181",5000),Participant(none,none,false)) {
     (zk:ZK) =>
-      Elect("/elect_test")(zk){println("won election %d".format(i))}
+      Participant("/elect_test")(zk){println("won election %d".format(i))}
   }
 
   def main(args:Array[String]) {

@@ -26,17 +26,32 @@ import scalaz._
 import Scalaz._
 import concurrent._
 
-case class Elect(node:Option[String], prevNode:Option[String], elected:Boolean)
 
-object Elect {
-  def participate(path:String,conn:ZK):ZKState[Elect, Unit] =
-    conn.withWriter[Elect,Unit] { writer =>
+/** Election participant state value
+ *
+ *  @param node The path to the node corresponding to the current participant
+ *  @param prevNode The path to the node immediately previous to the current node
+ *  @param elected Flag indicating if the current node has been elected
+ */
+case class Participant(node:Option[String], prevNode:Option[String], elected:Boolean)
+
+/** Companion to `Participant` class */
+object Participant {
+
+  /** Execution of participation in a leader election.
+   *
+   *  @param path The path of the parent node where particupants need to add their node
+   *  @param conn The connection to the `ZooKeeper` cluster
+   *  @return `ZKState[Participant, Unit]`
+   */
+  def participate(path:String,conn:ZK):ZKState[Participant, Unit] =
+    conn.withWriter[Participant,Unit] { writer =>
       for {
         es <- initT
         myNode <- writer.path(path+"/node").create("1",toSeqZKAccessControlEntry(Ids.OPEN_ACL_UNSAFE),CreateMode.EPHEMERAL_SEQUENTIAL)
         _ <- writer.path(myNode).watch
         children <- writer.path(path).children(false)
-        _ <- putT[PromisedResult,Elect] {
+        _ <- putT[PromisedResult,Participant] {
           val prev = for {
             z <- children.map(c => path+"/"+c).toSeq.sorted.toList.toZipper
             z <- z.findNext(_ == myNode)
@@ -47,15 +62,22 @@ object Elect {
       } yield ()
     }
 
-  def apply(path:String)(conn:ZK)(onElected: => Unit):ZKState[Elect, Unit] = {
-      val reader = conn.reader[Elect]
+  /** Choose a leader
+   *
+   *  @param path The path of the parent node where particupants need to add their node
+   *  @param conn The connection to the `ZooKeeper` cluster
+   *  @param onElected Function to be called when the current node is elected
+   *  @return `ZKState[Participant, Unit]`
+   */
+  def apply(path:String)(conn:ZK)(onElected: => Unit):ZKState[Participant, Unit] = {
+      val reader = conn.reader[Participant]
       for {
         es <- initT
-        _ <- es.node.fold(some = s => reader.path(s).exists() (passT[PromisedResult,Elect]) (participate(path,conn)),
+        _ <- es.node.fold(some = s => reader.path(s).exists() (passT[PromisedResult,Participant]) (participate(path,conn)),
                           none = participate(path,conn))
         es <- initT
-        _ <- es.prevNode.fold(none = passT[PromisedResult,Elect], // not quite
-                              some = s => reader.path(s).exists() (passT[PromisedResult,Elect]) (putT[PromisedResult,Elect](es.copy(prevNode=none,elected=true))))
+        _ <- es.prevNode.fold(none = passT[PromisedResult,Participant], // not quite
+                              some = s => reader.path(s).exists() (passT[PromisedResult,Participant]) (putT[PromisedResult,Participant](es.copy(prevNode=none,elected=true))))
         es <- initT
       } yield if (es.elected) onElected
               else ()
