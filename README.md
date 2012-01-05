@@ -81,13 +81,13 @@ clean up.
 Let's look at the body:
 
 ```scala
-      val reader = zk.reader[Unit]
-      val path = reader.path("/foo")
-      val path1 = reader.path("/bar")
-      for {
-        data <- path.data[String]()
-        data1<- path1.data[String](false)
-      } yield printer(data,data1)
+  val reader = zk.reader[Unit]
+  val path = reader.path("/foo")
+  val path1 = reader.path("/bar")
+  for {
+    data <- path.data[String]()
+    data1<- path1.data[String](false)
+  } yield printer(data,data1)
 ```
 
 From a ZK object you can get a _reader_ or you can create a _writer_ within a scope (more TBD on the writer scope as it relates to disabling watches).  From
@@ -98,7 +98,9 @@ can supply arbitrary serializers for getting data into and out of a node
 that is does *not* wish to watch the node at path `"/bar"`.  Again the `Unit` type in: `val reader = zk.reader[Unit]` is the type of the "state" to be transformed by
 the body.
 
-Coming: ZooKeeper-based leader elections with powah!
+## Recipes
+
+[Leader Election](https://github.com/corruptmemory/herding-cats/wiki/Leader-Election)
 
 ## License
 
