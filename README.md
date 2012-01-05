@@ -98,7 +98,7 @@ From a ZK object you can get a _reader_ or you can create a _writer_ within a sc
 a _reader_ you can get a _path_ value that enables access to the data in a node identified on the given path.  The most common operation being to
 get the data contained in a node (but there are functions for getting the "stat" and children of a node).  Data stored in ZooKeeper is essentially binary, so you
 can supply arbitrary serializers for getting data into and out of a node
-(see [serialization.scala](https://github.com/corruptmemory/herding-cats/blob/master/src/main/scala/serialization.scala)).  There are also wrappers around [sbinary](https://github.com/corruptmemory/sbinary).  The above example is using simple literal `String` serialization/deserialization.  The second example from `path1` is indicating
+(see [serialization.scala](https://github.com/corruptmemory/herding-cats/blob/master/library/src/main/scala/herding_cats/serialization.scala)).  There are also wrappers around [sbinary](https://github.com/corruptmemory/sbinary).  The above example is using simple literal `String` serialization/deserialization.  The second example from `path1` is indicating
 that is does *not* wish to watch the node at path `"/bar"`.  Again the `Unit` type in: `val reader = zk.reader[Unit]` is the type of the "state" to be transformed by
 the body.
 
