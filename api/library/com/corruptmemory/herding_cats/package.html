@@ -1,0 +1,761 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>com.corruptmemory.herding_cats</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img src="../../../lib/package_big.png" />
+        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.corruptmemory" class="extype" href="../package.html">corruptmemory</a></p>
+        <h1>herding_cats</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="kind">package</span>
+      <span class="symbol"> 
+        <span class="name">herding_cats</span>
+        
+        
+      </span>
+      </h4>
+      
+          <div class="fullcommenttop" id="comment"></div>
+        
+
+      <div id="template">
+
+        <div id="mbrsel">
+          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+          
+          
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+            </div>
+        </div>
+
+        
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="com.corruptmemory.herding_cats.Caught" data-isabs="false">
+      <a id="Caught:Caught"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Caught.html"><span class="name">Caught</span></a>
+        
+        <span class="params">(<span name="message">message: String</span>, <span name="throwable">throwable: Throwable</span>)</span><span class="result"> extends Error with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Error" data-isabs="true">
+      <a id="Error:Error"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="Error.html"><span class="name">Error</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Errors" data-isabs="true">
+      <a id="Errors:Errors"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="Errors.html"><span class="name">Errors</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Message" data-isabs="false">
+      <a id="Message:Message"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Message.html"><span class="name">Message</span></a>
+        
+        <span class="params">(<span name="message">message: String</span>)</span><span class="result"> extends Error with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.NoNode" data-isabs="false">
+      <a id="NoNode:NoNode"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="NoNode.html"><span class="name">NoNode</span></a>
+        
+        <span class="params">(<span name="path">path: String</span>)</span><span class="result"> extends Error with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.NodeExists" data-isabs="false">
+      <a id="NodeExists:NodeExists"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="NodeExists.html"><span class="name">NodeExists</span></a>
+        
+        <span class="params">(<span name="path">path: String</span>)</span><span class="result"> extends Error with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Results#PromisedResult" data-isabs="false">
+      <a id="PromisedResult:PromisedResult[T]"></a>
+      <h4 class="signature">
+      <span class="kind">type</span>
+      <span class="symbol"> 
+        <span class="name">PromisedResult</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        <span class="result"> = <span name="scalaz.concurrent.Promise" class="extype">Promise</span>[Result[T]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Just a <code>Promise</code> of a <code>Result</code></p><div class="fullcomment"><div class="comment cmt"><p>Just a <code>Promise</code> of a <code>Result</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Results" class="extype" href="Results.html">Results</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Results#Result" data-isabs="false">
+      <a id="Result:Result[T]"></a>
+      <h4 class="signature">
+      <span class="kind">type</span>
+      <span class="symbol"> 
+        <span class="name">Result</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        <span class="result"> = <span name="scalaz.Validation" class="extype">Validation</span>[<a name="com.corruptmemory.herding_cats.Error" class="extype" href="Error.html">Error</a>, T]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A Result is just a <code>Validation</code> over <code>Error</code> and <code>T</code></p><div class="fullcomment"><div class="comment cmt"><p>A Result is just a <code>Validation</code> over <code>Error</code> and <code>T</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Results" class="extype" href="Results.html">Results</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Results" data-isabs="true">
+      <a id="Results:Results"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="Results.html"><span class="name">Results</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Trait for the package that defines the results of Zookeeper operations</p>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.StateTs" data-isabs="true">
+      <a id="StateTs:StateTs"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="StateTs.html"><span class="name">StateTs</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Uncaught" data-isabs="false">
+      <a id="Uncaught:Uncaught"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Uncaught.html"><span class="name">Uncaught</span></a>
+        
+        <span class="params">(<span name="throwable">throwable: Throwable</span>)</span><span class="result"> extends Error with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Version" data-isabs="false">
+      <a id="Version:Version"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="Version.html"><span class="name">Version</span></a>
+        
+        <span class="params">(<span name="value">value: Int</span>)</span><span class="result"> extends ZKVersion with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZK" data-isabs="false">
+      <a id="ZK:ZK"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="ZK.html"><span class="name">ZK</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An abstraction over ZooKeeper connections</p>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKACL" data-isabs="true">
+      <a id="ZKACL:ZKACL"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="ZKACL.html"><span class="name">ZKACL</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKAccessControlEntry" data-isabs="false">
+      <a id="ZKAccessControlEntry:ZKAccessControlEntry"></a>
+      <h4 class="signature">
+      <span class="kind">case class</span>
+      <span class="symbol"> 
+        <a href="ZKAccessControlEntry.html"><span class="name">ZKAccessControlEntry</span></a>
+        
+        <span class="params">(<span name="id">id: Id</span>, <span name="perms">perms: Int</span>)</span><span class="result"> extends Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathBase" data-isabs="true">
+      <a id="ZKPathBase:ZKPathBase[S]"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="ZKPathBase.html"><span class="name">ZKPathBase</span></a>
+        <span class="tparams">[<span name="S">S</span>]</span>
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Base class for path-based operations
+</p>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathReader" data-isabs="false">
+      <a id="ZKPathReader:ZKPathReader[S]"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="ZKPathReader.html"><span class="name">ZKPathReader</span></a>
+        <span class="tparams">[<span name="S">S</span>]</span>
+        <span class="result"> extends ZKPathBase[S]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">An actual reader thingy.</p>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathWriter" data-isabs="false">
+      <a id="ZKPathWriter:ZKPathWriter[S]"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="ZKPathWriter.html"><span class="name">ZKPathWriter</span></a>
+        <span class="tparams">[<span name="S">S</span>]</span>
+        <span class="result"> extends ZKPathBase[S]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">A writer thingy.</p>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKSerialize" data-isabs="true">
+      <a id="ZKSerialize:ZKSerialize[T]"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="ZKSerialize.html"><span class="name">ZKSerialize</span></a>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKSerializers" data-isabs="true">
+      <a id="ZKSerializers:ZKSerializers"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="ZKSerializers.html"><span class="name">ZKSerializers</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Zookeepers#ZKState" data-isabs="false">
+      <a id="ZKState:ZKState[S, A]"></a>
+      <h4 class="signature">
+      <span class="kind">type</span>
+      <span class="symbol"> 
+        <span class="name">ZKState</span>
+        <span class="tparams">[<span name="S">S</span>, <span name="A">A</span>]</span>
+        <span class="result"> = <span name="scalaz.StateT" class="extype">StateT</span>[PromisedResult, S, A]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"><code>ZKState</code> is a <i>monadic</i> value abstracting over a state value <code>S</code>
+   returning a value <code>A</code> all wrapped in a com.corruptmemory.herding_cats.PromisedResult
+</p><div class="fullcomment"><div class="comment cmt"><p><code>ZKState</code> is a <i>monadic</i> value abstracting over a state value <code>S</code>
+   returning a value <code>A</code> all wrapped in a com.corruptmemory.herding_cats.PromisedResult
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Zookeepers" class="extype" href="Zookeepers.html">Zookeepers</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKVersion" data-isabs="true">
+      <a id="ZKVersion:ZKVersion"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="ZKVersion.html"><span class="name">ZKVersion</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>sealed abstract </dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKVersions" data-isabs="true">
+      <a id="ZKVersions:ZKVersions"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="ZKVersions.html"><span class="name">ZKVersions</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Zookeepers" data-isabs="true">
+      <a id="Zookeepers:Zookeepers"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="Zookeepers.html"><span class="name">Zookeepers</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Package trait used to expose <code>ZK</code> functions</p>
+    </li></ol>
+            </div>
+        
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="com.corruptmemory.herding_cats.AnyVersion" data-isabs="false">
+      <a id="AnyVersion:AnyVersion"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="AnyVersion$.html"><span class="name">AnyVersion</span></a>
+        
+        <span class="result"> extends ZKVersion with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Disconnected" data-isabs="false">
+      <a id="Disconnected:Disconnected"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="Disconnected$.html"><span class="name">Disconnected</span></a>
+        
+        <span class="result"> extends Error with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Results#PromisedResultBind" data-isabs="false">
+      <a id="PromisedResultBind:Bind[PromisedResult]"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol"> 
+        <span class="name">PromisedResultBind</span>
+        
+        <span class="result">: <span name="scalaz.Bind" class="extype">Bind</span>[PromisedResult]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Implicit evidence of a <code>Bind[PromisedResult]</code></p><div class="fullcomment"><div class="comment cmt"><p>Implicit evidence of a <code>Bind[PromisedResult]</code></p></div><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Results" class="extype" href="Results.html">Results</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Results#PromisedResultFunctor" data-isabs="false">
+      <a id="PromisedResultFunctor:Functor[PromisedResult]"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol"> 
+        <span class="name">PromisedResultFunctor</span>
+        
+        <span class="result">: <span name="scalaz.Functor" class="extype">Functor</span>[PromisedResult]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Implicit evidence of a <code>Functor[PromisedResult]</code></p><div class="fullcomment"><div class="comment cmt"><p>Implicit evidence of a <code>Functor[PromisedResult]</code></p></div><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Results" class="extype" href="Results.html">Results</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Results#PromisedResultPointed" data-isabs="false">
+      <a id="PromisedResultPointed:Pointed[PromisedResult]"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol"> 
+        <span class="name">PromisedResultPointed</span>
+        
+        <span class="result">: <span name="scalaz.Pointed" class="extype">Pointed</span>[PromisedResult]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Implicit evidence of a <code>Pointed[PromisedResult]</code></p><div class="fullcomment"><div class="comment cmt"><p>Implicit evidence of a <code>Pointed[PromisedResult]</code></p></div><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Results" class="extype" href="Results.html">Results</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Results#PromisedResultPure" data-isabs="false">
+      <a id="PromisedResultPure:Pure[PromisedResult]"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol"> 
+        <span class="name">PromisedResultPure</span>
+        
+        <span class="result">: <span name="scalaz.Pure" class="extype">Pure</span>[PromisedResult]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Implicit evidence of a <code>Pure[PromisedResult]</code></p><div class="fullcomment"><div class="comment cmt"><p>Implicit evidence of a <code>Pure[PromisedResult]</code></p></div><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Results" class="extype" href="Results.html">Results</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Shutdown" data-isabs="false">
+      <a id="Shutdown:Shutdown"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="Shutdown$.html"><span class="name">Shutdown</span></a>
+        
+        <span class="result"> extends Error with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.VersionMismatch" data-isabs="false">
+      <a id="VersionMismatch:VersionMismatch"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="VersionMismatch$.html"><span class="name">VersionMismatch</span></a>
+        
+        <span class="result"> extends Error with Product with Serializable</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZK" data-isabs="false">
+      <a id="ZK:ZK"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="ZK$.html"><span class="name">ZK</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Factory object to create wrappers around a <code>ZooKeeper</code> connection</p>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKCallbacks" data-isabs="false">
+      <a id="ZKCallbacks:ZKCallbacks"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="ZKCallbacks$.html"><span class="name">ZKCallbacks</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">ZooKeeper callback wrappers</p>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKSerialize" data-isabs="false">
+      <a id="ZKSerialize:ZKSerialize"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="ZKSerialize$.html"><span class="name">ZKSerialize</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKVersion" data-isabs="false">
+      <a id="ZKVersion:ZKVersion"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="ZKVersion$.html"><span class="name">ZKVersion</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKWatcher" data-isabs="false">
+      <a id="ZKWatcher:ZKWatcher"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="ZKWatcher$.html"><span class="name">ZKWatcher</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Zookeepers" data-isabs="false">
+      <a id="Zookeepers:Zookeepers"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="Zookeepers$.html"><span class="name">Zookeepers</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Companion object to the <code>Zookeepers</code> trait.</p>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKVersions#anyVersion" data-isabs="false">
+      <a id="anyVersion:ZKVersion"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">anyVersion</span>
+        
+        <span class="result">: <a name="com.corruptmemory.herding_cats.ZKVersion" class="extype" href="ZKVersion.html">ZKVersion</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKVersions" class="extype" href="ZKVersions.html">ZKVersions</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKSerializers#byteArraySerializer" data-isabs="false">
+      <a id="byteArraySerializer:ZKSerialize[Array[Byte]]"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol"> 
+        <span class="name">byteArraySerializer</span>
+        
+        <span class="result">: <a name="com.corruptmemory.herding_cats.ZKSerialize" class="extype" href="ZKSerialize.html">ZKSerialize</a>[<span name="scala.Array" class="extype">Array</span>[<span name="scala.Byte" class="extype">Byte</span>]]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKSerializers" class="extype" href="ZKSerializers.html">ZKSerializers</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Errors#caught" data-isabs="false">
+      <a id="caught(String,Throwable):Error"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">caught</span>
+        
+        <span class="params">(<span name="m">m: String</span>, <span name="t">t: Throwable</span>)</span><span class="result">: <a name="com.corruptmemory.herding_cats.Error" class="extype" href="Error.html">Error</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Errors" class="extype" href="Errors.html">Errors</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Errors#disconnected" data-isabs="false">
+      <a id="disconnected:Error"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">disconnected</span>
+        
+        <span class="result">: <a name="com.corruptmemory.herding_cats.Error" class="extype" href="Error.html">Error</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Errors" class="extype" href="Errors.html">Errors</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.package#emptyPromise" data-isabs="false">
+      <a id="emptyPromise[A](Strategy):Promise[A]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">emptyPromise</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        <span class="params">(<span class="implicit">implicit </span><span name="s">s: <span name="scalaz.concurrent.Strategy" class="extype">Strategy</span></span>)</span><span class="result">: <span name="scalaz.concurrent.Promise" class="extype">Promise</span>[A]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.StateTs#getsT" data-isabs="false">
+      <a id="getsT[F, S, A]((S) ⇒ A)(Pointed[F]):StateT[F, S, A]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">getsT</span>
+        <span class="tparams">[<span name="F">F<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="S">S</span>, <span name="A">A</span>]</span>
+        <span class="params">(<span name="f">f: (S) ⇒ A</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="p">p: <span name="scalaz.Pointed" class="extype">Pointed</span>[F]</span>)</span><span class="result">: <span name="scalaz.StateT" class="extype">StateT</span>[F, S, A]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.StateTs" class="extype" href="StateTs.html">StateTs</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.StateTs#initT" data-isabs="false">
+      <a id="initT[F, S](Pointed[F]):StateT[F, S, S]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">initT</span>
+        <span class="tparams">[<span name="F">F<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="S">S</span>]</span>
+        <span class="params">(<span class="implicit">implicit </span><span name="p">p: <span name="scalaz.Pointed" class="extype">Pointed</span>[F]</span>)</span><span class="result">: <span name="scalaz.StateT" class="extype">StateT</span>[F, S, S]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.StateTs" class="extype" href="StateTs.html">StateTs</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Errors#message" data-isabs="false">
+      <a id="message(String):Error"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">message</span>
+        
+        <span class="params">(<span name="m">m: String</span>)</span><span class="result">: <a name="com.corruptmemory.herding_cats.Error" class="extype" href="Error.html">Error</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Errors" class="extype" href="Errors.html">Errors</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.StateTs#modifyT" data-isabs="false">
+      <a id="modifyT[F, S]((S) ⇒ S)(Pointed[F],Bind[F]):StateT[F, S, Unit]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">modifyT</span>
+        <span class="tparams">[<span name="F">F<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="S">S</span>]</span>
+        <span class="params">(<span name="f">f: (S) ⇒ S</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="p">p: <span name="scalaz.Pointed" class="extype">Pointed</span>[F]</span>, <span name="b">b: <span name="scalaz.Bind" class="extype">Bind</span>[F]</span>)</span><span class="result">: <span name="scalaz.StateT" class="extype">StateT</span>[F, S, <span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.StateTs" class="extype" href="StateTs.html">StateTs</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Errors#noNode" data-isabs="false">
+      <a id="noNode(String):Error"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">noNode</span>
+        
+        <span class="params">(<span name="path">path: String</span>)</span><span class="result">: <a name="com.corruptmemory.herding_cats.Error" class="extype" href="Error.html">Error</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Errors" class="extype" href="Errors.html">Errors</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Errors#nodeExists" data-isabs="false">
+      <a id="nodeExists(String):Error"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">nodeExists</span>
+        
+        <span class="params">(<span name="path">path: String</span>)</span><span class="result">: <a name="com.corruptmemory.herding_cats.Error" class="extype" href="Error.html">Error</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Errors" class="extype" href="Errors.html">Errors</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.StateTs#passT" data-isabs="false">
+      <a id="passT[F, S](Pointed[F],Bind[F]):StateT[F, S, Unit]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">passT</span>
+        <span class="tparams">[<span name="F">F<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="S">S</span>]</span>
+        <span class="params">(<span class="implicit">implicit </span><span name="p">p: <span name="scalaz.Pointed" class="extype">Pointed</span>[F]</span>, <span name="b">b: <span name="scalaz.Bind" class="extype">Bind</span>[F]</span>)</span><span class="result">: <span name="scalaz.StateT" class="extype">StateT</span>[F, S, <span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.StateTs" class="extype" href="StateTs.html">StateTs</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.package#promiseUnit" data-isabs="false">
+      <a id="promiseUnit[S]:ZKState[S, Unit]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">promiseUnit</span>
+        <span class="tparams">[<span name="S">S</span>]</span>
+        <span class="result">: ZKState[S, <span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.StateTs#putT" data-isabs="false">
+      <a id="putT[F, S](S)(Pointed[F]):StateT[F, S, Unit]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">putT</span>
+        <span class="tparams">[<span name="F">F<span class="tparams">[<span name="_">_</span>]</span></span>, <span name="S">S</span>]</span>
+        <span class="params">(<span name="s">s: S</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="p">p: <span name="scalaz.Pointed" class="extype">Pointed</span>[F]</span>)</span><span class="result">: <span name="scalaz.StateT" class="extype">StateT</span>[F, S, <span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.StateTs" class="extype" href="StateTs.html">StateTs</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.recipes" data-isabs="false">
+      <a id="recipes:recipes"></a>
+      <h4 class="signature">
+      <span class="kind">package</span>
+      <span class="symbol"> 
+        <a href="recipes/package.html"><span class="name">recipes</span></a>
+        
+        
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Errors#shutdown" data-isabs="false">
+      <a id="shutdown:Error"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">shutdown</span>
+        
+        <span class="result">: <a name="com.corruptmemory.herding_cats.Error" class="extype" href="Error.html">Error</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Errors" class="extype" href="Errors.html">Errors</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.package#shutdownUnit" data-isabs="false">
+      <a id="shutdownUnit[S]:ZKState[S, Unit]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">shutdownUnit</span>
+        <span class="tparams">[<span name="S">S</span>]</span>
+        <span class="result">: ZKState[S, <span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKSerializers#stringSerializer" data-isabs="false">
+      <a id="stringSerializer:ZKSerialize[String]"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol"> 
+        <span class="name">stringSerializer</span>
+        
+        <span class="result">: <a name="com.corruptmemory.herding_cats.ZKSerialize" class="extype" href="ZKSerialize.html">ZKSerialize</a>[String]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKSerializers" class="extype" href="ZKSerializers.html">ZKSerializers</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKACL#toJListAcl" data-isabs="false">
+      <a id="toJListAcl(Seq[ZKAccessControlEntry]):List[ACL]"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol"> 
+        <span class="name">toJListAcl</span>
+        
+        <span class="params">(<span name="in">in: Seq[<a name="com.corruptmemory.herding_cats.ZKAccessControlEntry" class="extype" href="ZKAccessControlEntry.html">ZKAccessControlEntry</a>]</span>)</span><span class="result">: <span name="java.util.List" class="extype">List</span>[<span name="org.apache.zookeeper.data.ACL" class="extype">ACL</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKACL" class="extype" href="ZKACL.html">ZKACL</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKACL#toSeqZKAccessControlEntry" data-isabs="false">
+      <a id="toSeqZKAccessControlEntry(List[ACL]):Seq[ZKAccessControlEntry]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toSeqZKAccessControlEntry</span>
+        
+        <span class="params">(<span name="in">in: <span name="java.util.List" class="extype">List</span>[<span name="org.apache.zookeeper.data.ACL" class="extype">ACL</span>]</span>)</span><span class="result">: Seq[<a name="com.corruptmemory.herding_cats.ZKAccessControlEntry" class="extype" href="ZKAccessControlEntry.html">ZKAccessControlEntry</a>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKACL" class="extype" href="ZKACL.html">ZKACL</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Errors#uncaught" data-isabs="false">
+      <a id="uncaught(Throwable):Error"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">uncaught</span>
+        
+        <span class="params">(<span name="t">t: Throwable</span>)</span><span class="result">: <a name="com.corruptmemory.herding_cats.Error" class="extype" href="Error.html">Error</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Errors" class="extype" href="Errors.html">Errors</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKVersions#version" data-isabs="false">
+      <a id="version(Int):ZKVersion"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">version</span>
+        
+        <span class="params">(<span name="i">i: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <a name="com.corruptmemory.herding_cats.ZKVersion" class="extype" href="ZKVersion.html">ZKVersion</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKVersions" class="extype" href="ZKVersions.html">ZKVersions</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Errors#versionMismatch" data-isabs="false">
+      <a id="versionMismatch:Error"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">versionMismatch</span>
+        
+        <span class="result">: <a name="com.corruptmemory.herding_cats.Error" class="extype" href="Error.html">Error</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Errors" class="extype" href="Errors.html">Errors</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Zookeepers#withZK" data-isabs="false">
+      <a id="withZK[S](String,(String, S, (WatchedEvent, S) ⇒ PromisedResult[S]) ⇒ ZK,S)((ZK) ⇒ ZKState[S, Unit]):Unit"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">withZK</span>
+        <span class="tparams">[<span name="S">S</span>]</span>
+        <span class="params">(<span name="controlPath">controlPath: String</span>, <span name="factory">factory: (String, S, (<span name="org.apache.zookeeper.WatchedEvent" class="extype">WatchedEvent</span>, S) ⇒ PromisedResult[S]) ⇒ <a name="com.corruptmemory.herding_cats.ZK" class="extype" href="ZK.html">ZK</a></span>, <span name="initial">initial: S</span>)</span><span class="params">(<span name="body">body: (<a name="com.corruptmemory.herding_cats.ZK" class="extype" href="ZK.html">ZK</a>) ⇒ ZKState[S, <span name="scala.Unit" class="extype">Unit</span>]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Apply a <code>ZK</code> to a function</p><div class="fullcomment"><div class="comment cmt"><p>Apply a <code>ZK</code> to a function</p><p> This function only returns under the following circumstances:</p><ol class="decimal"><li>The <code>body</code> returns a <code>Shutdown</code> failure value
+  2. The connection to the <code>ZooKeeper</code> cluster suffers an unrecoverable failure
+</li></ol></div><dl class="paramcmts block"><dt class="tparam">S</dt><dd class="cmt"><p>The type of the state value
+</p></dd><dt class="param">controlPath</dt><dd class="cmt"><p>a Zookeeper path string</p></dd><dt class="param">factory</dt><dd class="cmt"><p>A function that takes in a <code>controlPath</code>, a state of type <code>S</code>, and a
+   function with type: <code>(WatchedEvent, S) =&gt; PromisedResult[S]</code> and yields a ZK value.  This
+   sets up the <i>watcher</i> event handler on the ZK connection.</p></dd><dt class="param">initial</dt><dd class="cmt"><p>The initial value of the state.</p></dd><dt class="param">body</dt><dd class="cmt"><p>The function that is invoked each time a watched node changes</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Zookeepers" class="extype" href="Zookeepers.html">Zookeepers</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+
+      </div>
+      
+      <div id="tooltip"></div>
+      
+    </body>
+      </html>
