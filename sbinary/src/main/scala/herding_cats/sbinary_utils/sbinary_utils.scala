@@ -18,13 +18,14 @@
  * limitations under the License.
  */
 
-package com.corruptmemory.herding_cats
-import scalaz._
-import Scalaz._
+package com.corruptmemory.herding_cats.sbinary_utils
 
 object SBinaryUtils {
+  import com.corruptmemory.herding_cats._
   import sbinary._
   import Operations._
+  import scalaz._
+  import Scalaz._
 
   implicit def sbinarySerializer[T : Writes : Reads]:ZKSerialize[T] = new ZKSerialize[T] {
     def write(x:T):Array[Byte] = toByteArray[T](x)

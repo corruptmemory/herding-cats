@@ -27,6 +27,7 @@ import scalaz._
 import Scalaz._
 import concurrent._
 
+/** ZooKeeper callback wrappers */
 object ZKCallbacks {
   import org.apache.zookeeper.KeeperException.Code
   def rcWrap[T](path:String,rc:Int)(result: => Result[T]):Result[T] = Code.get(rc) match {
@@ -36,7 +37,6 @@ object ZKCallbacks {
     case Code.NONODE => noNode(path).fail
     case Code.NODEEXISTS => nodeExists(path).fail
     case x@_ => {
-      println("'%s' not OK: %s".format(path,x.toString))
       message("'%s' not OK: %s".format(path,x.toString)).fail
     }
   }

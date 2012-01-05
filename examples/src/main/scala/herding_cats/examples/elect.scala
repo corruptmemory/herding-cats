@@ -1,5 +1,5 @@
 /**
- * main.scala
+ * elect.scala
  *
  * @author <a href="mailto:jim@corruptmemory.com">Jim Powers</a>
  *
@@ -18,18 +18,14 @@
  * limitations under the License.
  */
 
-package com.corruptmemory.herding_cats.recipes
-import com.corruptmemory.herding_cats._
-import org.apache.zookeeper.{CreateMode,ZooDefs}
-import ZooDefs.Ids
-import scalaz._
-import Scalaz._
-import concurrent._
-import scala.actors.Futures._
+package com.corruptmemory.herding_cats.examples
 
-object ElectMain {
+object Elect {
+  import com.corruptmemory.herding_cats._
+  import com.corruptmemory.herding_cats.recipes._
   import scalaz._
   import Scalaz._
+  import scala.actors.Futures._
 
   def election(i:Int):Unit = withZK[Participant]("/test/election%d".format(i),ZK("127.0.0.1:2181",5000),Participant(none,none,false)) {
     (zk:ZK) =>

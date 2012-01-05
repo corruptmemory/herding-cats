@@ -1,0 +1,989 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"init",
+				"Initialized"
+			],
+			[
+				"Pr",
+				"PrevNode"
+			],
+			[
+				"dis",
+				"distance"
+			],
+			[
+				"or",
+				"oraclerepo"
+			],
+			[
+				"sun",
+				"sunrepoGF"
+			],
+			[
+				"unf",
+				"unfilteredVersion"
+			],
+			[
+				"av",
+				"avslVersion"
+			],
+			[
+				"Fail",
+				"FailureMap"
+			],
+			[
+				"failureM",
+				"failureMap"
+			],
+			[
+				"rootG",
+				"rootGoto"
+			],
+			[
+				"for",
+				"format"
+			],
+			[
+				"st",
+				"state"
+			],
+			[
+				"Fai",
+				"FailureMap"
+			],
+			[
+				"out",
+				"outputMap"
+			],
+			[
+				"char",
+				"charMap"
+			],
+			[
+				"St",
+				"StateID"
+			],
+			[
+				"S",
+				"String"
+			],
+			[
+				"re",
+				"resetLog"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/main/scala/zookeeper.scala",
+			"settings":
+			{
+				"buffer_size": 3956,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/main.scala",
+			"settings":
+			{
+				"buffer_size": 1286,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/path.scala",
+			"settings":
+			{
+				"buffer_size": 7382,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/callbacks.scala",
+			"settings":
+			{
+				"buffer_size": 7177,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/result.scala",
+			"settings":
+			{
+				"buffer_size": 1758,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/error.scala",
+			"settings":
+			{
+				"buffer_size": 1500,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/package.scala",
+			"settings":
+			{
+				"buffer_size": 1385,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/recipes/elect.scala",
+			"settings":
+			{
+				"buffer_size": 2409,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/recipes/main.scala",
+			"settings":
+			{
+				"buffer_size": 1415,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/stateT.scala",
+			"settings":
+			{
+				"buffer_size": 1366,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main/scala/watcher.scala",
+			"settings":
+			{
+				"buffer_size": 1377,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 5541,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/User/sbt.sublime-build",
+	"command_palette":
+	{
+		"height": 69.0,
+		"selected_items":
+		[
+			[
+				"Package Control: U",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"git",
+				"Git: Commit"
+			]
+		],
+		"width": 528.0
+	},
+	"console":
+	{
+		"height": 136.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": true,
+		"show_tabs": true,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/jim/personal/herding-cats/src/main/scala/recipes/",
+		"/home/jim/.config/sublime-text-2/Packages/User/Scala.sublime-settings",
+		"/home/jim/.config/sublime-text-2/Packages/User/Base File.sublime-settings",
+		"/home/jim/.config/sublime-text-2/Packages/Color Scheme - Default/JimsWorld.tmTheme",
+		"/home/jim/.config/sublime-text-2/Packages/User/Global.sublime-settings",
+		"/home/jim/.emacs",
+		"/home/jim/.config/sublime-text-2/Packages/BracketHighlighter/Default (Linux).sublime-keymap",
+		"/home/jim/.xmonad/xmonad.hs",
+		"/home/jim/personal/herding-cats/src/main/scala/callbacks.scala",
+		"/home/jim/personal/herding-cats/src/main/scala/package.scala",
+		"/home/jim/personal/herding-cats/src/main/scala/error.scala",
+		"/home/jim/personal/herding-cats/src/main/scala/result.scala",
+		"/home/jim/.vim/syntax/scala.vim",
+		"/home/jim/.vim/colors/wombat.vim",
+		"/home/jim/.vimrc",
+		"/home/jim/.config/sublime-text-2/Packages/Color Scheme - Default/All Hallow's Eve.tmTheme",
+		"/home/jim/.local/share/applications/alacarte-made-2.desktop",
+		"/home/jim/.sbt/plugins/build.sbt",
+		"/home/jim/personal/herding-cats/scalaz/core/src/main/scala/scalaz/Id.scala",
+		"/home/jim/personal/herding-cats/src/main/scala/main.scala",
+		"/home/jim/personal/herding-cats/src/main/scala/zookeeper.scala",
+		"/home/jim/personal/herding-cats/src/main/scala/path.scala",
+		"/home/jim/personal/herding-cats/src/main/scala/watcher.scala",
+		"/home/jim/personal/herding-cats/project/build.scala",
+		"/home/jim/personal/herding-cats/README.md",
+		"/home/jim/personal/herding-cats/scalaz/concurrent/src/main/scala/scalaz/concurrent/Promise.scala",
+		"/home/jim/personal/herding-cats/scalaz/core/src/main/scala/scalaz/Validation.scala",
+		"/home/jim/personal/herding-cats/scalaz/core/src/main/scala/scalaz/syntax/ValidationV.scala",
+		"/home/jim/personal/herding-cats/scalaz/core/src/main/scala/scalaz/package.scala",
+		"/home/jim/personal/herding-cats/scalaz/core/src/main/scala/scalaz/NonEmptyList.scala",
+		"/home/jim/personal/herding-cats/scalaz/core/src/main/scala/scalaz/syntax/MonoidSyntax.scala",
+		"/home/jim/personal/herding-cats/herding-cats.sublime-project",
+		"/home/jim/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
+		"/home/jim/personal/herding-cats/src/main/scala/version.scala",
+		"/home/jim/personal/herding-cats/src/main/scala/ace.scala",
+		"/home/jim/personal/scala-aho-corasick/src/main/scala/com/corruptmemory/aho_corasick/match.scala",
+		"/home/jim/patch_projects/patch/app/models/application_model.rb",
+		"/home/jim/patch_projects/patch/app/controllers/articles_controller.rb",
+		"/home/jim/patch_projects/patch/app/models/article.rb",
+		"/home/jim/patch_projects/patch/lib/has_related_content.rb",
+		"/home/jim/patch_projects/patch/app/models/relation.rb",
+		"/home/jim/patch_projects/patch/lib/has_related_links.rb",
+		"/home/jim/patch_projects/patch/lib/has_assets.rb",
+		"/home/jim/patch_projects/patch/lib/acts_as_authored.rb",
+		"/home/jim/patch_projects/patch/lib/has_creator.rb",
+		"/home/jim/patch_projects/patch/lib/acts_as_routable.rb",
+		"/home/jim/patch_projects/patch/app/models/deal.rb",
+		"/home/jim/.mysql/workbench/connections.xml",
+		"/home/jim/patch_projects/patch/config/database.yml",
+		"/home/jim/patch_projects/patch/api/patch_server.rb",
+		"/home/jim/.config/sublime-text-2/Packages/Default/Default (Linux).sublime-keymap",
+		"/home/jim/patch_projects/patch/lib/tasks/hosting.rake",
+		"/home/jim/patch_projects/patch/lib/tasks/db.rake",
+		"/home/jim/patch_projects/listings-server/project/build.scala",
+		"/home/jim/patch_projects/listings-server/src/main/scala/Example.scala",
+		"/home/jim/patch_projects/listings-server/src/main/scala/com/patch/listings_server/scerver.scala",
+		"/home/jim/patch_projects/listings-server/build.sbt",
+		"/home/jim/.config/sublime-text-2/Packages/User/Distraction Free.sublime-settings",
+		"/home/jim/.config/sublime-text-2/Packages/Default/Distraction Free.sublime-settings",
+		"/home/jim/.config/sublime-text-2/Packages/Default/Global.sublime-settings",
+		"/home/jim/.config/sublime-text-2/Packages/Default/Base File.sublime-settings",
+		"/home/jim/personal/scala-ac/src/main/scala/com/corruptmemory/aho_corasick/match.scala",
+		"/home/jim/scalaz/core/src/main/scala/scalaz/Kind.scala",
+		"/home/jim/scalaz/sql/src/main/scala/scalaz/sql/JdbcType.scala",
+		"/home/jim/scalaz/core/src/main/scala/scalaz/WriterT.scala",
+		"/home/jim/salat/salat-core/src/main/scala/com/novus/salat/dao/SalatDAO.scala",
+		"/home/jim/patch_projects/mongodumper/project/build.scala",
+		"/home/jim/patch_projects/mongodumper/src/main/scala/main.scala",
+		"/home/jim/.config/sublime-text-2/Packages/User/JSON.sublime-settings",
+		"/home/jim/workspace/Unfiltered/scalaz/src/main/scala/monad/logger.scala",
+		"/home/jim/workspace/Unfiltered/scalaz/src/main/scala/monad/monads.scala",
+		"/home/jim/workspace/Unfiltered/scalaz/src/main/scala/monad/package.scala",
+		"/home/jim/workspace/Unfiltered/scalaz/src/main/scala/monad/params.scala",
+		"/home/jim/workspace/Unfiltered/scalaz/src/main/scala/monad/test.scala",
+		"/home/jim/workspace/Unfiltered/library/src/main/scala/request/params.scala",
+		"/home/jim/workspace/Unfiltered/oauth/src/test/scala/HeaderSpec.scala"
+	],
+	"find":
+	{
+		"height": 33.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"/home/jim/.emacs.d,*.el",
+			"/home/jim/personal/herding-cats/scalaz/core,*.scala",
+			"/home/jim/patch_projects/patch",
+			"/home/jim/patch_projects/patch/app",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"fail",
+			"pathr",
+			"print",
+			"Result[",
+			"    case Code.NONODE => nonode.failNel\n",
+			"comment",
+			"simple",
+			"magit",
+			"65",
+			"setdatacallback",
+			"Promise[Result",
+			"^(\\s+)p",
+			"PromisedResult",
+			"ZKState",
+			"000000",
+			"lin",
+			"num",
+			"number",
+			"back",
+			"zkstate",
+			"failure(",
+			"nel",
+			"failNel",
+			"ValidationNEL",
+			"validationnel",
+			"success",
+			"validationnel",
+			"println",
+			"// (Strategy.Sequential)",
+			"(Strategy.Sequential)",
+			"@suspend",
+			"T",
+			"[T,K]",
+			"cont(result)",
+			"cont:",
+			"cont",
+			"wrapped",
+			"void  ",
+			"assignment",
+			"assi",
+			"assigned_to",
+			"editor",
+			"ready",
+			"def published?",
+			"published?",
+			"workflow",
+			"ready",
+			"load_article",
+			"find_by_permalink",
+			"article",
+			"articles",
+			"find_by_permalink",
+			"@article",
+			"live_at",
+			"live?",
+			"published_at",
+			"media_template?",
+			"live?",
+			"published_at",
+			"load_",
+			"assigned_to",
+			"assigned",
+			"include",
+			"all_assets",
+			"ready?",
+			"live_at",
+			"live?",
+			"relat",
+			"include",
+			"permal",
+			"enter",
+			"menu",
+			"Goto",
+			"println",
+			" = ",
+			"min",
+			"SalatDAO",
+			"resolvers",
+			"open",
+			"scrolling",
+			"smooth"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"$1}",
+			"ZKState1",
+			"fail",
+			"(Strategy.Sequential)",
+			"// (Strategy.Sequential)",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/main/scala/zookeeper.scala",
+					"settings":
+					{
+						"buffer_size": 3956,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1115,
+								1141
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/main/scala/main.scala",
+					"settings":
+					{
+						"buffer_size": 1286,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								681,
+								1286
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 130.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/main/scala/path.scala",
+					"settings":
+					{
+						"buffer_size": 7382,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4536,
+								4536
+							]
+						],
+						"settings":
+						{
+							"spell_check": true,
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2080.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/main/scala/callbacks.scala",
+					"settings":
+					{
+						"buffer_size": 7177,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1473,
+								1473
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 380.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/main/scala/result.scala",
+					"settings":
+					{
+						"buffer_size": 1758,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1690,
+								1690
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 65.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/main/scala/error.scala",
+					"settings":
+					{
+						"buffer_size": 1500,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1418,
+								1418
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 201.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/main/scala/package.scala",
+					"settings":
+					{
+						"buffer_size": 1385,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 300.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/main/scala/recipes/elect.scala",
+					"settings":
+					{
+						"buffer_size": 2409,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1420,
+								1420
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 620.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/main/scala/recipes/main.scala",
+					"settings":
+					{
+						"buffer_size": 1415,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1408,
+								1408
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 261.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/main/scala/stateT.scala",
+					"settings":
+					{
+						"buffer_size": 1366,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								427,
+								427
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 40.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "src/main/scala/watcher.scala",
+					"settings":
+					{
+						"buffer_size": 1377,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1258,
+								1258
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Scala/Scala.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "README.md",
+					"settings":
+					{
+						"buffer_size": 5541,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5513,
+								5513
+							]
+						],
+						"settings":
+						{
+							"spell_check": true,
+							"syntax": "Packages/Markdown/Markdown.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1242.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 32.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"rea",
+				"herding-cats/README.md"
+			],
+			[
+				"zoo",
+				"herding-cats/src/main/scala/zookeeper.scala"
+			],
+			[
+				"elect",
+				"herding-cats/src/main/scala/recipes/elect.scala"
+			],
+			[
+				"watch",
+				"herding-cats/src/main/scala/watcher.scala"
+			],
+			[
+				"state",
+				"herding-cats/src/main/scala/stateT.scala"
+			],
+			[
+				"res",
+				"herding-cats/src/main/scala/result.scala"
+			],
+			[
+				"pack",
+				"herding-cats/src/main/scala/package.scala"
+			],
+			[
+				"err",
+				"herding-cats/src/main/scala/error.scala"
+			],
+			[
+				"result",
+				"src/main/scala/result.scala"
+			],
+			[
+				"main",
+				"src/main/scala/main.scala"
+			],
+			[
+				"call",
+				"src/main/scala/callbacks.scala"
+			],
+			[
+				"path",
+				"src/main/scala/path.scala"
+			],
+			[
+				"pa",
+				"src/main/scala/path.scala"
+			],
+			[
+				"non",
+				"scalaz/core/src/main/scala/scalaz/NonEmptyList.scala"
+			],
+			[
+				"va",
+				"scalaz/core/src/main/scala/scalaz/Validation.scala"
+			],
+			[
+				"b",
+				"project/build.scala"
+			],
+			[
+				"",
+				"lib/acts_as_routable.rb"
+			],
+			[
+				"acts_as_per",
+				"lib/acts_as_permissionable.rb"
+			],
+			[
+				"application",
+				"app/models/application_model.rb"
+			],
+			[
+				"article.",
+				"app/models/article.rb"
+			],
+			[
+				"article",
+				"app/controllers/articles_controller.rb"
+			],
+			[
+				"deal",
+				"app/models/deal.rb"
+			],
+			[
+				"deals",
+				"app/controllers/api/deals_controller.rb"
+			],
+			[
+				"acts_as_r",
+				"lib/acts_as_routable.rb"
+			],
+			[
+				"acts_as_rout",
+				"lib/acts_as_routable.rb"
+			],
+			[
+				"acts",
+				"lib/acts_as_authored.rb"
+			],
+			[
+				"has_cre",
+				"lib/has_creator.rb"
+			],
+			[
+				"has_ass",
+				"lib/has_assets.rb"
+			],
+			[
+				"appl",
+				"app/models/application_model.rb"
+			],
+			[
+				"has_real",
+				"lib/has_related_links.rb"
+			],
+			[
+				"relation",
+				"app/models/relation.rb"
+			],
+			[
+				"has_re",
+				"lib/has_related_content.rb"
+			],
+			[
+				"article_controler",
+				"app/controllers/articles_controller.rb"
+			],
+			[
+				"database",
+				"config/database.yml"
+			],
+			[
+				"patch",
+				"api/patch_server.rb"
+			],
+			[
+				"ser",
+				"src/main/scala/com/patch/listings_server/server.scala"
+			],
+			[
+				"exam",
+				"src/main/scala/Example.scala"
+			],
+			[
+				"bui",
+				"build.sbt"
+			],
+			[
+				"ma",
+				"src/main/scala/com/corruptmemory/aho_corasick/match.scala"
+			],
+			[
+				"matcher",
+				"src/main/scala/com/corruptmemory/aho_corasick/matcher.scala"
+			],
+			[
+				"writert",
+				"core/src/main/scala/scalaz/WriterT.scala"
+			],
+			[
+				"tester",
+				"oauth/src/test/scala/HeaderSpec.scala"
+			],
+			[
+				"params",
+				"library/src/main/scala/request/params.scala"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 272.0,
+	"status_bar_visible": true
+}

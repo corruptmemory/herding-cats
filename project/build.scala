@@ -65,7 +65,7 @@ object Resolvers {
 object Dependencies {
   val scalaCheckVersion = "1.9"
   val scalaZVersion = "6.0.3"
-  val zookeeperVersion = "3.3.3"
+  val zookeeperVersion = "3.3.4"
   val sbinaryVersion = "0.4.1-SNAPSHOT"
 
   val scalaz = "org.scalaz" %% "scalaz-core" % scalaZVersion
@@ -81,12 +81,31 @@ object ArticleServiceBuild extends Build {
   import BuildSettings._
   import Resolvers._
 
-  val coreDeps = Seq(scalaz,scalaCheck,zookeeper,sbinary)
+  val coreDeps = Seq(scalaz,scalaCheck,zookeeper)
+  val sbinaryDeps = Seq(sbinary)
 
-  lazy val herdingCats = Project("herding-cats",file("."),
-                                    settings = buildSettings ++ Seq(name := "Herding Cats",
-                                                                    scalacOptions += "-deprecation",
-                                                                    // scalacOptions += "-Xprint:-4",
-                                                                    libraryDependencies := coreDeps,
-                                                                    resolvers ++= Seq(jbossResolver,javaNetResolvers,corruptmemoryUnfilteredRepo,/*thirdParty,*/repo1Resolver)))
+  def namedSubProject(projectName: String, id: String, path: File, settings: Seq[Setting[_]]) = Project(id, path, settings = buildSettings ++ settings ++ Seq(name := projectName))
+
+  lazy val herdingCats = Project("herding-cats",
+                                 file("."),
+                                 settings = buildSettings ++ Seq(name := "Herding Cats")) aggregate (library, sbinaryModule, examples)
+
+  lazy val library = namedSubProject("Herding Cats Lib",
+                                     "library",
+                                     file("library"),
+                                     Seq(scalacOptions += "-deprecation",
+                                         libraryDependencies := coreDeps,
+                                         resolvers ++= Seq(jbossResolver,javaNetResolvers,corruptmemoryUnfilteredRepo,repo1Resolver)))
+
+  lazy val examples = namedSubProject("Herding Cats Examples",
+                                      "examples",
+                                      file("examples"),
+                                      Seq(scalacOptions += "-deprecation")) dependsOn(library)
+
+  lazy val sbinaryModule = namedSubProject("Herding Cats SBinary module",
+                                           "sbinary-utils",
+                                           file("sbinary"),
+                                           Seq(scalacOptions += "-deprecation",
+                                               libraryDependencies := sbinaryDeps,
+                                               resolvers ++= Seq(jbossResolver,javaNetResolvers,corruptmemoryUnfilteredRepo,repo1Resolver))) dependsOn(library)
 }

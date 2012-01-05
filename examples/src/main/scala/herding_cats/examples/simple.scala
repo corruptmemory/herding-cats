@@ -1,5 +1,5 @@
 /**
- * main.scala
+ * simple.scala
  *
  * @author <a href="mailto:jim@corruptmemory.com">Jim Powers</a>
  *
@@ -18,18 +18,19 @@
  * limitations under the License.
  */
 
-package com.corruptmemory.herding_cats
+package com.corruptmemory.herding_cats.examples
 
-object Main {
+object Simple {
   import scalaz._
   import Scalaz._
+  import com.corruptmemory.herding_cats._
 
   def printer(data:String,data1:String) {
     println("Data: %s".format(data))
     println("Data1: %s".format(data1))
   }
 
-  def foo:Unit = withZK[Unit]("/test/control",ZK("127.0.0.1:2181",5000),()) {
+  def example:Unit = withZK[Unit]("/test/control",ZK("127.0.0.1:2181",5000),()) {
     (zk:ZK) =>
       val path = zk.reader[Unit].path("/foo")
       val path1 = zk.reader[Unit].path("/bar")
@@ -41,6 +42,6 @@ object Main {
   }
 
   def main(args:Array[String]) {
-    foo
+    example
   }
 }
