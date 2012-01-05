@@ -8,6 +8,10 @@ series of callbacks (i.e.: inversion of control).  The result is a much cleaner 
 
 Still under heavy development, but potentially useful.
 
+## API docs
+
+[Library](http://corruptmemory.github.com/herding-cats/api/library/index.html)
+
 ## Usage
 
 Interaction with ZooKeeper is done [monadically](http://en.wikipedia.org/wiki/Monad), in Scala parlance this means using
