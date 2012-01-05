@@ -10,7 +10,7 @@ Still under heavy development, but potentially useful.
 
 ## API docs
 
-[Library](http://corruptmemory.github.com/herding-cats/api/library/index.html)
+[Library](http://corruptmemory.github.com/herding-cats/api/library/index.html#com.corruptmemory.herding_cats.package)
 
 ## Usage
 
