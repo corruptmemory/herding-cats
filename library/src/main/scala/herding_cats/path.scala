@@ -197,7 +197,7 @@ class ZKPathWriter[S](val path: String, val connection: ZK) extends ZKPathBase[S
    *  @param version a value of type ZKVersion
    *  @return `ZKState[S,Stat]`
    */
-  def update[T: ZKSerialize](data: T, version: ZKVersion): ZKState1[Stat] =
+  def update[T: ZKSerialize](data: T, version: ZKVersion = anyVersion): ZKState1[Stat] =
     makePromise[Stat] { p =>
       import ZKSerialize._
       val arrayData = write[T](data)
@@ -211,7 +211,7 @@ class ZKPathWriter[S](val path: String, val connection: ZK) extends ZKPathBase[S
    *  @param version a value of type ZKVersion
    *  @return `ZKState[S,Stat]`
    */
-  def updateACL(acl: Seq[ZKAccessControlEntry], version: ZKVersion): ZKState1[Stat] =
+  def updateACL(acl: Seq[ZKAccessControlEntry], version: ZKVersion = anyVersion): ZKState1[Stat] =
     makePromise[Stat] { p =>
       val cb = setAclCallback(connection, acl, version, p, (_: Int, _: String, _: Object, stat: Stat) => stat.success)
       connection.withWrapped(_.setACL(path, acl, version.value, cb, this))

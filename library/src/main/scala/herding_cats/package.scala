@@ -35,6 +35,9 @@ package object herding_cats extends ZKVersions
   def promiseUnit[S]:ZKState[S, Unit] = 
     stateT[PromisedResult,S,Unit](s => promise((s,()).success[Error]))
 
+  def errorState[S,A](e:Error):ZKState[S, A] = 
+    stateT[PromisedResult,S,A](_ => promise(e.fail[(S,A)]))
+
   def shutdownUnit[S]:ZKState[S, Unit] = 
     stateT[PromisedResult,S,Unit](s => promise(shutdown.fail[(S,Unit)]))
 }
