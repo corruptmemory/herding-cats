@@ -56,10 +56,10 @@ object SimpleLoadBalance {
         writer => {
           val rc = resources.size
           val cc = clients.size
-          if ((rc > 0) && (cc > 0)) { 
+          if ((rc > 0) && (cc > 0)) {
             val r = cc/rc
             resources.toSeq.zip(partitionN(if (r == 0) 1 else r,clients)).foreach {
-              case (resource,assignedClients) => assignedClients.foreach(writer.path(_).update[String](resource))
+              case (resource,assignedClients) => assignedClients.foreach(p => writer.path(clientsPath+"/"+p).update[String](resourcesPath+"/"+resource))
             }
             promiseUnit[Unit]
           } else if (rc == 0) errorState[Unit,Unit](message("No resources at: %s".format(resourcesPath)))
