@@ -1,0 +1,547 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+        <head>
+          <title>com.corruptmemory.herding_cats.ZKPathWriter</title>
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <img src="../../../lib/class_big.png" />
+        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.corruptmemory" class="extype" href="../package.html">corruptmemory</a>.<a name="com.corruptmemory.herding_cats" class="extype" href="package.html">herding_cats</a></p>
+        <h1>ZKPathWriter</h1>
+      </div>
+
+      <h4 class="signature" id="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <span class="name">ZKPathWriter</span>
+        <span class="tparams">[<span name="S">S</span>]</span>
+        <span class="result"> extends <a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a>[S]</span>
+      </span>
+      </h4>
+      
+          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>A writer thingy.
+</p></div><dl class="paramcmts block"><dt class="tparam">S</dt><dd class="cmt"><p>The type of <i>state</i> to operate over
+</p></dd></dl><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a>[S], AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+        </div></div>
+        
+
+      <div id="template">
+
+        <div id="mbrsel">
+          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+          <div id="order">
+                <span class="filtertype">Ordering</span>
+                <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
+              </div>
+          <div id="ancestors">
+                <span class="filtertype">Inherited</span>
+                <ol><li class="hideall out"><span>Hide All</span></li>
+                <li class="showall in"><span>Show all</span></li></ol>
+                <ol id="linearization"><li name="com.corruptmemory.herding_cats.ZKPathWriter" class="in"><span>ZKPathWriter</span></li><li name="com.corruptmemory.herding_cats.ZKPathBase" class="in"><span>ZKPathBase</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+              </div>
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+            </div>
+        </div>
+
+        <div class="members" id="constructors">
+              <h3>Instance Constructors</h3>
+              <ol><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathWriter#this" data-isabs="false">
+      <a id="this:ZKPathWriter[S]"></a>
+      <h4 class="signature">
+      <span class="kind">new</span>
+      <span class="symbol"> 
+        <span class="name">ZKPathWriter</span>
+        
+        <span class="params">(<span name="path">path: String</span>, <span name="connection">connection: <a name="com.corruptmemory.herding_cats.ZK" class="extype" href="ZK.html">ZK</a></span>)</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt"></p>
+    </li></ol>
+            </div>
+
+        <div class="types members" id="types">
+              <h3>Type Members</h3>
+              <ol><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathBase#ZKState1" data-isabs="false">
+      <a id="ZKState1:ZKState1[A]"></a>
+      <h4 class="signature">
+      <span class="kind">type</span>
+      <span class="symbol"> 
+        <span class="name">ZKState1</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        <span class="result"> = <span name="scalaz.StateT" class="extype">StateT</span>[PromisedResult, S, A]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Type synonym, duh.</p><div class="fullcomment"><div class="comment cmt"><p>Type synonym, duh.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a></dd></dl></div>
+    </li></ol>
+            </div>
+        
+        
+
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+      <a id="!=(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">!=</span>
+        
+        <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">!=</span>
+        
+        <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">##</span>
+        
+        <span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+      <a id="==(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">==</span>
+        
+        <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">==</span>
+        
+        <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">asInstanceOf</span>
+        <span class="tparams">[<span name="T0">T0</span>]</span>
+        <span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathBase#children" data-isabs="false">
+      <a id="children(Boolean):ZKState1[Traversable[String]]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">children</span>
+        
+        <span class="params">(<span name="watch">watch: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="result">: ZKState1[Traversable[String]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A Get the children of the current node
+</p><div class="fullcomment"><div class="comment cmt"><p>A Get the children of the current node
+</p></div><dl class="paramcmts block"><dt class="param">watch</dt><dd class="cmt"><p>used to indicate if the node on this patch should be watched.  You know, like a hawk.</p></dd><dt>returns</dt><dd class="cmt"><p><code>ZKState[S,Traversable[String]]</code>
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a></dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">clone</span>
+        
+        <span class="params">()</span><span class="result">: AnyRef</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathWriter#connection" data-isabs="false">
+      <a id="connection:ZK"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">connection</span>
+        
+        <span class="result">: <a name="com.corruptmemory.herding_cats.ZK" class="extype" href="ZK.html">ZK</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The current connection</p><div class="fullcomment"><div class="comment cmt"><p>The current connection</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKPathWriter" class="extype" href="">ZKPathWriter</a> → <a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathWriter#create" data-isabs="false">
+      <a id="create[T](T,Seq[ZKAccessControlEntry],CreateMode)(ZKSerialize[T]):ZKState1[String]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">create</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        <span class="params">(<span name="data">data: T</span>, <span name="acl">acl: Seq[<a name="com.corruptmemory.herding_cats.ZKAccessControlEntry" class="extype" href="ZKAccessControlEntry.html">ZKAccessControlEntry</a>]</span>, <span name="createMode">createMode: <span name="org.apache.zookeeper.CreateMode" class="extype">CreateMode</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a name="com.corruptmemory.herding_cats.ZKSerialize" class="extype" href="ZKSerialize.html">ZKSerialize</a>[T]</span>)</span><span class="result">: ZKState1[String]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Create a new node at the current path
+</p><div class="fullcomment"><div class="comment cmt"><p>Create a new node at the current path
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>The type of data to retrieve.  There is a context bounds of <code>ZKSerialize</code> on this type
+  so an instance of <code>ZKSerialize</code> for the desired type has to be visible in implicit scope.</p></dd><dt class="param">data</dt><dd class="cmt"><p>The data to be written (serialized) into the node.  Of type T</p></dd><dt class="param">acl</dt><dd class="cmt"><p>A <code>Seq</code> of <code>ZKAccessControlEntry</code> values.</p></dd><dt>returns</dt><dd class="cmt"><p><code>ZKState[S,String]</code>
+</p></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathWriter#createIfNotExists" data-isabs="false">
+      <a id="createIfNotExists[T](T,Seq[ZKAccessControlEntry],CreateMode)(ZKSerialize[T]):ZKState1[String]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">createIfNotExists</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        <span class="params">(<span name="data">data: T</span>, <span name="acl">acl: Seq[<a name="com.corruptmemory.herding_cats.ZKAccessControlEntry" class="extype" href="ZKAccessControlEntry.html">ZKAccessControlEntry</a>]</span>, <span name="createMode">createMode: <span name="org.apache.zookeeper.CreateMode" class="extype">CreateMode</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a name="com.corruptmemory.herding_cats.ZKSerialize" class="extype" href="ZKSerialize.html">ZKSerialize</a>[T]</span>)</span><span class="result">: ZKState1[String]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Create a new node at the current path only if the node does not exist, otherwise do nothing
+</p><div class="fullcomment"><div class="comment cmt"><p>Create a new node at the current path only if the node does not exist, otherwise do nothing
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>The type of data to retrieve.  There is a context bounds of <code>ZKSerialize</code> on this type
+  so an instance of <code>ZKSerialize</code> for the desired type has to be visible in implicit scope.</p></dd><dt class="param">data</dt><dd class="cmt"><p>The data to be written (serialized) into the node.  Of type T</p></dd><dt class="param">acl</dt><dd class="cmt"><p>A <code>Seq</code> of <code>ZKAccessControlEntry</code> values.</p></dd><dt>returns</dt><dd class="cmt"><p><code>ZKState[S,String]</code>
+</p></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathBase#data" data-isabs="false">
+      <a id="data[T](Boolean)(ZKSerialize[T]):ZKState1[T]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">data</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        <span class="params">(<span name="watch">watch: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a name="com.corruptmemory.herding_cats.ZKSerialize" class="extype" href="ZKSerialize.html">ZKSerialize</a>[T]</span>)</span><span class="result">: ZKState1[T]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A Get the data for the current node
+</p><div class="fullcomment"><div class="comment cmt"><p>A Get the data for the current node
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>The type of data to retrieve.  There is a context bounds of <code>ZKSerialize</code> on this type
+  so an instance of <code>ZKSerialize</code> for the desired type has to be visible in implicit scope.</p></dd><dt class="param">watch</dt><dd class="cmt"><p>used to indicate if the node on this patch should be watched.  You know, like a hawk.</p></dd><dt>returns</dt><dd class="cmt"><p><code>ZKState[S,T]</code>
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathWriter#delete" data-isabs="false">
+      <a id="delete(ZKVersion):ZKState1[Unit]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">delete</span>
+        
+        <span class="params">(<span name="version">version: <a name="com.corruptmemory.herding_cats.ZKVersion" class="extype" href="ZKVersion.html">ZKVersion</a> = <span class="symbol"><span class="name"><a href="ZKVersions.html#anyVersion:ZKVersion">anyVersion</a></span></span></span>)</span><span class="result">: ZKState1[<span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Delete the node at the current path.</p><div class="fullcomment"><div class="comment cmt"><p>Delete the node at the current path.
+</p></div><dl class="paramcmts block"><dt class="param">version</dt><dd class="cmt"><p>a value of type ZKVersion</p></dd><dt>returns</dt><dd class="cmt"><p><code>ZKState[S,Unit]</code>
+</p></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">eq</span>
+        
+        <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#equals" data-isabs="false">
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">equals</span>
+        
+        <span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathBase#exists" data-isabs="false">
+      <a id="exists(Boolean)(⇒ ZKState1[Unit])(⇒ ZKState1[Unit]):ZKState1[Unit]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">exists</span>
+        
+        <span class="params">(<span name="watch">watch: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="params">(<span name="a">a: ⇒ ZKState1[<span name="scala.Unit" class="extype">Unit</span>]</span>)</span><span class="params">(<span name="b">b: ⇒ ZKState1[<span name="scala.Unit" class="extype">Unit</span>]</span>)</span><span class="result">: ZKState1[<span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A combinator over node existence
+</p><div class="fullcomment"><div class="comment cmt"><p>A combinator over node existence
+</p></div><dl class="paramcmts block"><dt class="param">watch</dt><dd class="cmt"><p>used to indicate if the node on this patch should be watched.  You know, like a hawk.</p></dd><dt class="param">a</dt><dd class="cmt"><p>the &quot;true&quot; case</p></dd><dt class="param">b</dt><dd class="cmt"><p>the &quot;false&quot; case</p></dd><dt>returns</dt><dd class="cmt"><p><code>ZKState[S,Unit]</code>
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a></dd></dl></div>
+    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">finalize</span>
+        
+        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
+      <a id="getClass():java.lang.Class[_]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">getClass</span>
+        
+        <span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">hashCode</span>
+        
+        <span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">isInstanceOf</span>
+        <span class="tparams">[<span name="T0">T0</span>]</span>
+        <span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathBase#makePromise" data-isabs="false">
+      <a id="makePromise[A]((PromisedResult[A]) ⇒ Unit):ZKState1[A]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">makePromise</span>
+        <span class="tparams">[<span name="A">A</span>]</span>
+        <span class="params">(<span name="f">f: (PromisedResult[A]) ⇒ <span name="scala.Unit" class="extype">Unit</span></span>)</span><span class="result">: ZKState1[A]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Helper function to wrap the creation of a completable Promise</p><div class="fullcomment"><div class="comment cmt"><p>Helper function to wrap the creation of a completable Promise</p><p> <b>Note</b>: Will capture any exception and wrap it into an Uncaught failure
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>ZKState[S,A]</code>
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">ne</span>
+        
+        <span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">notify</span>
+        
+        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">notifyAll</span>
+        
+        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathWriter#path" data-isabs="false">
+      <a id="path:String"></a>
+      <h4 class="signature">
+      <span class="kind">val</span>
+      <span class="symbol"> 
+        <span class="name">path</span>
+        
+        <span class="result">: String</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The current path</p><div class="fullcomment"><div class="comment cmt"><p>The current path</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKPathWriter" class="extype" href="">ZKPathWriter</a> → <a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathBase#stat" data-isabs="false">
+      <a id="stat(Boolean):ZKState1[Stat]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">stat</span>
+        
+        <span class="params">(<span name="watch">watch: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="result">: ZKState1[<span name="org.apache.zookeeper.data.Stat" class="extype">Stat</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Get the stat of a node.</p><div class="fullcomment"><div class="comment cmt"><p>Get the stat of a node.
+</p></div><dl class="paramcmts block"><dt class="param">watch</dt><dd class="cmt"><p>used to indicate if the node on this patch should be watched</p></dd><dt>returns</dt><dd class="cmt"><p><code>ZKState[S,Stat]</code>
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathBase#statAndACL" data-isabs="false">
+      <a id="statAndACL:ZKState1[(Stat, Seq[ZKAccessControlEntry])]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">statAndACL</span>
+        
+        <span class="result">: ZKState1[(<span name="org.apache.zookeeper.data.Stat" class="extype">Stat</span>, Seq[<a name="com.corruptmemory.herding_cats.ZKAccessControlEntry" class="extype" href="ZKAccessControlEntry.html">ZKAccessControlEntry</a>])]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Get the stat and ACL of a node.</p><div class="fullcomment"><div class="comment cmt"><p>Get the stat and ACL of a node.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>ZKState[S,(Stat,Seq[ZKAccessControlEntry]]]</code>
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
+      <a id="synchronized[T0](⇒ T0):T0"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">synchronized</span>
+        <span class="tparams">[<span name="T0">T0</span>]</span>
+        <span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toString</span>
+        
+        <span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathWriter#update" data-isabs="false">
+      <a id="update[T](T,ZKVersion)(ZKSerialize[T]):ZKState1[Stat]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">update</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        <span class="params">(<span name="data">data: T</span>, <span name="version">version: <a name="com.corruptmemory.herding_cats.ZKVersion" class="extype" href="ZKVersion.html">ZKVersion</a></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: <a name="com.corruptmemory.herding_cats.ZKSerialize" class="extype" href="ZKSerialize.html">ZKSerialize</a>[T]</span>)</span><span class="result">: ZKState1[<span name="org.apache.zookeeper.data.Stat" class="extype">Stat</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Update the data of the node at the current path.</p><div class="fullcomment"><div class="comment cmt"><p>Update the data of the node at the current path.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>The type of data to retrieve.  There is a context bounds of <code>ZKSerialize</code> on this type
+  so an instance of <code>ZKSerialize</code> for the desired type has to be visible in implicit scope.</p></dd><dt class="param">data</dt><dd class="cmt"><p>The data to be written (serialized) into the node.  Of type T</p></dd><dt class="param">version</dt><dd class="cmt"><p>a value of type ZKVersion</p></dd><dt>returns</dt><dd class="cmt"><p><code>ZKState[S,Stat]</code>
+</p></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathWriter#updateACL" data-isabs="false">
+      <a id="updateACL(Seq[ZKAccessControlEntry],ZKVersion):ZKState1[Stat]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">updateACL</span>
+        
+        <span class="params">(<span name="acl">acl: Seq[<a name="com.corruptmemory.herding_cats.ZKAccessControlEntry" class="extype" href="ZKAccessControlEntry.html">ZKAccessControlEntry</a>]</span>, <span name="version">version: <a name="com.corruptmemory.herding_cats.ZKVersion" class="extype" href="ZKVersion.html">ZKVersion</a> = <span class="symbol"><span class="name"><a href="ZKVersions.html#anyVersion:ZKVersion">anyVersion</a></span></span></span>)</span><span class="result">: ZKState1[<span name="org.apache.zookeeper.data.Stat" class="extype">Stat</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Update the ACL of the node at the current path.</p><div class="fullcomment"><div class="comment cmt"><p>Update the ACL of the node at the current path.
+</p></div><dl class="paramcmts block"><dt class="param">acl</dt><dd class="cmt"><p>A <code>Seq</code> of <code>ZKAccessControlEntry</code> values.</p></dd><dt class="param">version</dt><dd class="cmt"><p>a value of type ZKVersion</p></dd><dt>returns</dt><dd class="cmt"><p><code>ZKState[S,Stat]</code>
+</p></dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">wait</span>
+        
+        <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">wait</span>
+        
+        <span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">wait</span>
+        
+        <span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathBase#watch" data-isabs="false">
+      <a id="watch:ZKState1[Unit]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">watch</span>
+        
+        <span class="result">: ZKState1[<span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Watch the current node
+</p><div class="fullcomment"><div class="comment cmt"><p>Watch the current node
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>ZKState[S,Unit]</code>
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div name="com.corruptmemory.herding_cats.ZKPathBase" class="parent">
+              <h3>Inherited from <a name="com.corruptmemory.herding_cats.ZKPathBase" class="extype" href="ZKPathBase.html">ZKPathBase</a>[S]</h3>
+            </div><div name="scala.AnyRef" class="parent">
+              <h3>Inherited from AnyRef</h3>
+            </div><div name="scala.Any" class="parent">
+              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+            </div>
+
+      </div>
+      
+      <div id="tooltip"></div>
+      
+    </body>
+      </html>
