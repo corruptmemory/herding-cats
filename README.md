@@ -106,6 +106,8 @@ the body.
 
 [Leader Election](https://github.com/corruptmemory/herding-cats/wiki/Leader-Election)
 
+[Simple Load Balancing](https://github.com/corruptmemory/herding-cats/wiki/Simple-Load-Balancing)
+
 ## License
 
 Licensed under Apache 2.0, see `LICENSE.txt` for details.
