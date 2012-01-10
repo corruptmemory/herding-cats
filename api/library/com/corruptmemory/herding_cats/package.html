@@ -212,6 +212,17 @@
       </span>
       </h4>
       
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Zookeepers#ZKConnFactory" data-isabs="false">
+      <a id="ZKConnFactory:ZKConnFactory[S]"></a>
+      <h4 class="signature">
+      <span class="kind">type</span>
+      <span class="symbol"> 
+        <span class="name">ZKConnFactory</span>
+        <span class="tparams">[<span name="S">S</span>]</span>
+        <span class="result"> = (String, S, (<span name="org.apache.zookeeper.WatchedEvent" class="extype">WatchedEvent</span>, S) ⇒ PromisedResult[S]) ⇒ <a name="com.corruptmemory.herding_cats.ZK" class="extype" href="ZK.html">ZK</a></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Zookeepers" class="extype" href="Zookeepers.html">Zookeepers</a></dd></dl></div>
     </li><li visbl="pub" name="com.corruptmemory.herding_cats.ZKPathBase" data-isabs="true">
       <a id="ZKPathBase:ZKPathBase[S]"></a>
       <h4 class="signature">
@@ -532,6 +543,17 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.package" class="extype" href="package$.html">package</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.package#errorState" data-isabs="false">
+      <a id="errorState[S, A](Error):ZKState[S, A]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">errorState</span>
+        <span class="tparams">[<span name="S">S</span>, <span name="A">A</span>]</span>
+        <span class="params">(<span name="e">e: <a name="com.corruptmemory.herding_cats.Error" class="extype" href="Error.html">Error</a></span>)</span><span class="result">: ZKState[S, A]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.package" class="extype" href="package$.html">package</a></dd></dl></div>
     </li><li visbl="pub" name="com.corruptmemory.herding_cats.StateTs#getsT" data-isabs="false">
       <a id="getsT[F, S, A]((S) ⇒ A)(Pointed[F]):StateT[F, S, A]"></a>
       <h4 class="signature">
@@ -565,6 +587,17 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Errors" class="extype" href="Errors.html">Errors</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.package#mkZKState" data-isabs="false">
+      <a id="mkZKState[S, A](⇒ S,⇒ A):ZKState[S, A]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">mkZKState</span>
+        <span class="tparams">[<span name="S">S</span>, <span name="A">A</span>]</span>
+        <span class="params">(<span name="s">s: ⇒ S</span>, <span name="a">a: ⇒ A</span>)</span><span class="result">: ZKState[S, A]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.package" class="extype" href="package$.html">package</a></dd></dl></div>
     </li><li visbl="pub" name="com.corruptmemory.herding_cats.StateTs#modifyT" data-isabs="false">
       <a id="modifyT[F, S]((S) ⇒ S)(Pointed[F],Bind[F]):StateT[F, S, Unit]"></a>
       <h4 class="signature">
@@ -609,6 +642,17 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.StateTs" class="extype" href="StateTs.html">StateTs</a></dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.package#promiseResult" data-isabs="false">
+      <a id="promiseResult[S, A](⇒ A):ZKState[S, A]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">promiseResult</span>
+        <span class="tparams">[<span name="S">S</span>, <span name="A">A</span>]</span>
+        <span class="params">(<span name="a">a: ⇒ A</span>)</span><span class="result">: ZKState[S, A]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.package" class="extype" href="package$.html">package</a></dd></dl></div>
     </li><li visbl="pub" name="com.corruptmemory.herding_cats.package#promiseUnit" data-isabs="false">
       <a id="promiseUnit[S]:ZKState[S, Unit]"></a>
       <h4 class="signature">
@@ -731,13 +775,13 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="com.corruptmemory.herding_cats.Errors" class="extype" href="Errors.html">Errors</a></dd></dl></div>
     </li><li visbl="pub" name="com.corruptmemory.herding_cats.Zookeepers#withZK" data-isabs="false">
-      <a id="withZK[S](String,(String, S, (WatchedEvent, S) ⇒ PromisedResult[S]) ⇒ ZK,S)((ZK) ⇒ ZKState[S, Unit]):Unit"></a>
+      <a id="withZK[S](String,ZKConnFactory[S],S)((ZK) ⇒ ZKState[S, Unit]):Unit"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol"> 
         <span class="name">withZK</span>
         <span class="tparams">[<span name="S">S</span>]</span>
-        <span class="params">(<span name="controlPath">controlPath: String</span>, <span name="factory">factory: (String, S, (<span name="org.apache.zookeeper.WatchedEvent" class="extype">WatchedEvent</span>, S) ⇒ PromisedResult[S]) ⇒ <a name="com.corruptmemory.herding_cats.ZK" class="extype" href="ZK.html">ZK</a></span>, <span name="initial">initial: S</span>)</span><span class="params">(<span name="body">body: (<a name="com.corruptmemory.herding_cats.ZK" class="extype" href="ZK.html">ZK</a>) ⇒ ZKState[S, <span name="scala.Unit" class="extype">Unit</span>]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="params">(<span name="controlPath">controlPath: String</span>, <span name="factory">factory: ZKConnFactory[S]</span>, <span name="initial">initial: S</span>)</span><span class="params">(<span name="body">body: (<a name="com.corruptmemory.herding_cats.ZK" class="extype" href="ZK.html">ZK</a>) ⇒ ZKState[S, <span name="scala.Unit" class="extype">Unit</span>]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Apply a <code>ZK</code> to a function</p><div class="fullcomment"><div class="comment cmt"><p>Apply a <code>ZK</code> to a function</p><p> This function only returns under the following circumstances:</p><ol class="decimal"><li>The <code>body</code> returns a <code>Shutdown</code> failure value

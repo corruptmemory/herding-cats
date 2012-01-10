@@ -2,38 +2,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.corruptmemory.herding_cats.Zookeepers</title>
+          <title>com.corruptmemory.herding_cats.recipes.SimpleLoadBalance</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
-      <script type="text/javascript" src="../../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../../lib/template.js"></script>
-      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      <link type="text/css" media="screen" rel="stylesheet" href="../../../../lib/template.css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
     
         </head>
-        <body class="type">
+        <body class="value">
       <div id="definition">
-        <a title="Go to companion" href="Zookeepers$.html"><img src="../../../lib/trait_to_object_big.png" /></a>
-        <p id="owner"><a name="com" class="extype" href="../../package.html">com</a>.<a name="com.corruptmemory" class="extype" href="../package.html">corruptmemory</a>.<a name="com.corruptmemory.herding_cats" class="extype" href="package.html">herding_cats</a></p>
-        <h1><a title="Go to companion" href="Zookeepers$.html">Zookeepers</a></h1>
+        <img src="../../../../lib/object_big.png" />
+        <p id="owner"><a name="com" class="extype" href="../../../package.html">com</a>.<a name="com.corruptmemory" class="extype" href="../../package.html">corruptmemory</a>.<a name="com.corruptmemory.herding_cats" class="extype" href="../package.html">herding_cats</a>.<a name="com.corruptmemory.herding_cats.recipes" class="extype" href="package.html">recipes</a></p>
+        <h1>SimpleLoadBalance</h1>
       </div>
 
       <h4 class="signature" id="signature">
-      <span class="kind">trait</span>
+      <span class="kind">object</span>
       <span class="symbol"> 
-        <span class="name">Zookeepers</span>
+        <span class="name">SimpleLoadBalance</span>
         
         <span class="result"> extends AnyRef</span>
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Package trait used to expose <code>ZK</code> functions</p></div><div class="toggleContainer block">
+          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Simple load balancer</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
-        </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a name="com.corruptmemory.herding_cats.package" class="extype" href="package$.html">package</a></div>
         </div></div>
         
 
@@ -49,7 +46,7 @@
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall out"><span>Hide All</span></li>
                 <li class="showall in"><span>Show all</span></li></ol>
-                <ol id="linearization"><li name="com.corruptmemory.herding_cats.Zookeepers" class="in"><span>Zookeepers</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+                <ol id="linearization"><li name="com.corruptmemory.herding_cats.recipes.SimpleLoadBalance" class="in"><span>SimpleLoadBalance</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -59,34 +56,7 @@
 
         
 
-        <div class="types members" id="types">
-              <h3>Type Members</h3>
-              <ol><li visbl="pub" name="com.corruptmemory.herding_cats.Zookeepers#ZKConnFactory" data-isabs="false">
-      <a id="ZKConnFactory:ZKConnFactory[S]"></a>
-      <h4 class="signature">
-      <span class="kind">type</span>
-      <span class="symbol"> 
-        <span class="name">ZKConnFactory</span>
-        <span class="tparams">[<span name="S">S</span>]</span>
-        <span class="result"> = (String, S, (<span name="org.apache.zookeeper.WatchedEvent" class="extype">WatchedEvent</span>, S) ⇒ PromisedResult[S]) ⇒ <a name="com.corruptmemory.herding_cats.ZK" class="extype" href="ZK.html">ZK</a></span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Zookeepers#ZKState" data-isabs="false">
-      <a id="ZKState:ZKState[S, A]"></a>
-      <h4 class="signature">
-      <span class="kind">type</span>
-      <span class="symbol"> 
-        <span class="name">ZKState</span>
-        <span class="tparams">[<span name="S">S</span>, <span name="A">A</span>]</span>
-        <span class="result"> = <span name="scalaz.StateT" class="extype">StateT</span>[PromisedResult, S, A]</span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt"><code>ZKState</code> is a <i>monadic</i> value abstracting over a state value <code>S</code>
-   returning a value <code>A</code> all wrapped in a com.corruptmemory.herding_cats.PromisedResult
-</p>
-    </li></ol>
-            </div>
+        
         
         
 
@@ -147,6 +117,20 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.recipes.SimpleLoadBalance#apply" data-isabs="false">
+      <a id="apply(String,String)(ZK):ZKState[Unit, Unit]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">apply</span>
+        
+        <span class="params">(<span name="resourcesPath">resourcesPath: String</span>, <span name="clientsPath">clientsPath: String</span>)</span><span class="params">(<span name="conn">conn: <a name="com.corruptmemory.herding_cats.ZK" class="extype" href="../ZK.html">ZK</a></span>)</span><span class="result">: ZKState[<span name="scala.Unit" class="extype">Unit</span>, <span name="scala.Unit" class="extype">Unit</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Load balance a set of resources to a set of clients</p><div class="fullcomment"><div class="comment cmt"><p>Load balance a set of resources to a set of clients</p><p> Balancing algorithm is extremely simple and naive: simply distribute
+ the available clients evenly across the resources
+</p></div><dl class="paramcmts block"><dt class="param">resourcesPath</dt><dd class="cmt"><p>The path of the parent node where resource nodes will be listed</p></dd><dt class="param">clientsPath</dt><dd class="cmt"><p>The path of the parent node where client nodes will be listed</p></dd><dt class="param">conn</dt><dd class="cmt"><p>The connection to the <code>ZooKeeper</code> cluster</p></dd><dt>returns</dt><dd class="cmt"><p><code>ZKState[Unit, Unit]</code>
+</p></dd></dl></div>
     </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
@@ -168,7 +152,7 @@
         <span class="params">()</span><span class="result">: AnyRef</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -204,7 +188,7 @@
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -274,6 +258,17 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li visbl="pub" name="com.corruptmemory.herding_cats.recipes.SimpleLoadBalance#partitionN" data-isabs="false">
+      <a id="partitionN[T](Int,Traversable[T]):Seq[Traversable[T]]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">partitionN</span>
+        <span class="tparams">[<span name="T">T</span>]</span>
+        <span class="params">(<span name="n">n: <span name="scala.Int" class="extype">Int</span></span>, <span name="items">items: Traversable[T]</span>)</span><span class="result">: Seq[Traversable[T]]</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -338,22 +333,6 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="com.corruptmemory.herding_cats.Zookeepers#withZK" data-isabs="false">
-      <a id="withZK[S](String,ZKConnFactory[S],S)((ZK) ⇒ ZKState[S, Unit]):Unit"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol"> 
-        <span class="name">withZK</span>
-        <span class="tparams">[<span name="S">S</span>]</span>
-        <span class="params">(<span name="controlPath">controlPath: String</span>, <span name="factory">factory: ZKConnFactory[S]</span>, <span name="initial">initial: S</span>)</span><span class="params">(<span name="body">body: (<a name="com.corruptmemory.herding_cats.ZK" class="extype" href="ZK.html">ZK</a>) ⇒ ZKState[S, <span name="scala.Unit" class="extype">Unit</span>]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Apply a <code>ZK</code> to a function</p><div class="fullcomment"><div class="comment cmt"><p>Apply a <code>ZK</code> to a function</p><p> This function only returns under the following circumstances:</p><ol class="decimal"><li>The <code>body</code> returns a <code>Shutdown</code> failure value
-  2. The connection to the <code>ZooKeeper</code> cluster suffers an unrecoverable failure
-</li></ol></div><dl class="paramcmts block"><dt class="tparam">S</dt><dd class="cmt"><p>The type of the state value
-</p></dd><dt class="param">controlPath</dt><dd class="cmt"><p>a Zookeeper path string</p></dd><dt class="param">factory</dt><dd class="cmt"><p>A function that takes in a <code>controlPath</code>, a state of type <code>S</code>, and a
-   function with type: <code>(WatchedEvent, S) =&gt; PromisedResult[S]</code> and yields a ZK value.  This
-   sets up the <i>watcher</i> event handler on the ZK connection.</p></dd><dt class="param">initial</dt><dd class="cmt"><p>The initial value of the state.</p></dd><dt class="param">body</dt><dd class="cmt"><p>The function that is invoked each time a watched node changes</p></dd></dl></div>
     </li></ol>
             </div>
 
